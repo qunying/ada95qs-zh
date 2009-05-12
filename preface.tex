@@ -1,0 +1,71 @@
+\chapter{前言}
+\pagestyle{empty}
+
+\section{目的}
+本书\footnote{部分内容来自国防部 Ada 联合项目办公室 (Department of Defense Ada
+Joint Program Office) 资助的研究结果, 资金由高等研究计划署 (Advanced Research
+Projects Agency) 通过奖助金 \#MDA972-92-J-1018 提供。本书的内容并不一定代表美国
+政府的立场和政策, 不能因此而推论受到官方的认可。}的目的是帮助电脑专业人员确立
+一套风格准则从而写出更高好的 Ada 95 程序。
+这套风格准则将会直接影响他们程序的代码质量。本风格指南并不打算代替 Ada
+参考手册 (1995) 或原理 (1995)，也不是 Ada 95 程序语言的教程和从 Ada 83 过渡
+到 Ada 95 的指南。 关于这些问题，请读者查阅相关的资料。
+
+本指南根据程序员为了写出高质量、可靠、可重用、可移植的 Ada 程序，所做出的各个
+重要决定，进行分章描述。章节中某些部分会有所重复，因为不是所有的决定都可以
+独立做出。 本书对源代码的呈现、可读性、程序结构、并行处理、可移植性、可重用性、
+性能以及面向对象进行了分章阐述。
+
+每一章都分为若干准则，内容规范而具可塑性，可广泛的应用。每个准则都简明叙述了
+应遵守的规则以及从原理上解释其重要性。准则也提供了范例，以及可能的异例。许多
+准则都非常明确，可以作为公司或者项目的编程标准。其他的需要管理上对于某个具
+体事例决定是否可作为标准，这种情况，书中都会用一个样板的具体事例来说明和使用。
+
+\section{背景}
+Ada 联合项目办公室 (Ada Joint Program Office, AJPO) 资助了本风格指南。
+对原来支持 Ada 83 的《Ada 品质和风格: 专业程序员的准则》版本 02.01.01
+ (AQ\&S 83) (软件生产力协会，Software Productivity consortium 1992) 进行了
+修改和增加了使用 Ada 95 的准则。 Ada 95 的准则产生于从 Ada 9X 项目、AJPO
+图书馆以及整个 Ada 社区得到的丰富数据。 软件生产力协会的技术人员发起了这次
+更新，高等研究计划署参与了这次努力。
+
+之前的 AQ\&S 83 提供了一套准则，帮助程序员依据这些准则来使用 Ada 的各项功能。
+1992 年， 协会在 AJPO 的合约下完成了版本 2.1 的更新。AJPO 这么提及它 ``所有
+国防部项目的推荐风格指南。''
+
+\section{公众评论}
+这本新风格指南期望给新手和有经验的 Ada 程序员提供一个工具。为了到达这个目的，
+协会直接让公众和 Ada 社区中可联系到的最好的专家参与其中。为了保证这种参与度，
+本风格指南的完成通过了一个三阶段的过程：完成一个基本的草稿，举行公众和专家的
+审核，完成最后的风格指南。
+
+协会欢迎对本书的评论， 以继续提高其品质和有用性。作者会仔细考虑对现存准则
+的建议和未来需要扩充的地方的建议。有突出某个问题的例子会更有帮助。
+
+本书的电子版本可以从 Ada 信息交换所 (Ada Information Clearinghouse)
+下载 (电话: 1 (800) 232-4211; 电邮:
+\url{adainfo@sw-eng.falls-church.va.us})。\footnote{
+译者注：AJPO 已于 1998 年 10 月 1 日关闭。
+英文资料可由 \url{http://www.adaic.org/docs/95style/} 获得。}
+
+请直接发评论给以下地址：
+
+\noindent
+Christine Ausnit\\
+Software Productivity Consortium\\
+2214 Rock Hill Road\\
+Herndon, VA 22070\\
+e-mail: ausnit@software.org\\
+fax: (703) 742-7200
+
+或
+
+\noindent
+Kent A. Johnson\\
+Software Productivity Consortium\\
+2214 Rock Hill Road\\
+Herndon, VA 22070\\
+e-mail: johnson@software.org\\
+fax: (703) 742-7200
+
+请在评论中包含您的联系方式。
