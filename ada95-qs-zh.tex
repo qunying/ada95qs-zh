@@ -1,4 +1,16 @@
 % -*- coding: utf-8 -*-
+% Ada 95 品质和风格
+% 版权所有 (C) 2009, 朱群英
+% Copyright (C) 2009, Zhu Qun-Ying
+%
+% 本书的 TeX 代码和由之生成的 ps，pdf，html，等其他格式的文件
+% 遵循 GNU通用公共授权第三版或其后的版本。
+%
+% 本书是基于有益的目的而加以发布，然而不负任何担保责任。
+%
+% 您应已收到附随于本书的GNU通用公共授权的副本；如果没有，
+% 请参考 <http://www.gnu.org/licenses/gpl.html>
+
 \documentclass[11pt]{book}
 \usepackage[bindingoffset=1.5cm,top=3.5cm, bottom=3.5cm]{geometry}
 \usepackage[boldfont,slantfont,CJKnumber]{xeCJK}
@@ -26,6 +38,8 @@ pdfauthor={Zhu Qun-Ying}]{hyperref}
 \include{caption-zh}
 
 \begin{document}
+\urlstyle{rm}
+
 \title{{\textbf{\Huge{Ada 95 品质和风格}}}\\
 \huge{专业程序员的准则}}
 \author{
@@ -37,10 +51,24 @@ pdfauthor={Zhu Qun-Ying}]{hyperref}
 \vfill
 版权所有 \copyright{} 2009
 }
-
 \frontmatter
 \pagestyle{empty}
 \maketitle
+\clearpage
+${}${}
+\vfill
+本书使用 \href{http://scripts.sil.org/xetex}{\XeTeX} 和
+ \href{http://bbs.ctex.org/viewthread.php?tid=40232&page=1}{xeCJK} 进行
+排版。 \LaTeX 源码可从 \url{http://code.google.com/p/ada95qs-zh/}获得。
+
+本书的 TeX 代码和由之生成的 ps，pdf，html，等其他格式的文件
+遵循 GNU 通用公共授权第三版或其后的版本发布。
+
+您应已收到附随于本书的GNU通用公共授权的副本；如果没有，
+请参考 \url{http://www.gnu.org/licenses/gpl.html}。
+
+\vspace{3em}
+版权所有 \copyright 2009 朱群英
 
 \setcounter{secnumdepth}{-1} % 避免章节计数
 \input{copyright-notice}
@@ -59,5 +87,7 @@ pdfauthor={Zhu Qun-Ying}]{hyperref}
 
 \input{src-presentation}
 \input{readability}
+
+\input{bib}
 
 \end{document}
