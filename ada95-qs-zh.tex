@@ -13,7 +13,7 @@
 
 \documentclass[11pt]{book}
 \usepackage[bindingoffset=1.5cm,top=3.5cm, bottom=3.5cm]{geometry}
-\usepackage[boldfont,slantfont,CJKnumber]{xeCJK}
+\usepackage[boldfont,slantfont,CJKnumber,CJKaddspaces]{xeCJK}
 \CJKlanguage{Chinese-Simp}
 \defaultfontfeatures{Mapping=tex-text}
 \setmainfont{DejaVu Sans}% 设置缺省英文字体
@@ -35,8 +35,10 @@ pdfsubject={Guidelines for Professional Programmers},
 pdfkeywords={Ada, Programmming, Quality, Style, Chinese},
 pdfauthor={Zhu Qun-Ying}]{hyperref}
 
-\include{caption-zh}
+\usepackage{titlesec}
+\usepackage{amssymb}
 
+\include{caption-zh}
 \begin{document}
 \urlstyle{rm}
 
@@ -47,7 +49,7 @@ pdfauthor={Zhu Qun-Ying}]{hyperref}
 翻译: 朱群英
 }
 \date{
-中文修订版: 0.1, \today\\
+中文修订版: 0.2, \today\\
 \vfill
 版权所有 \copyright{} 2009
 }
@@ -81,6 +83,8 @@ ${}${}
 \pagestyle{fancy}
 \pagenumbering{roman}
 \tableofcontents
+\addcontentsline{toc}{chapter}{\contentsname}
+\listoftables
 
 \mainmatter
 \input{introduction}
