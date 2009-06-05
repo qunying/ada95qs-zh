@@ -18,7 +18,8 @@
 \defaultfontfeatures{Mapping=tex-text}
 \setmainfont{DejaVu Sans}% 设置缺省英文字体
 \setCJKmainfont{AR PL KaitiM GB}% 设置缺省中文字体
-\usepackage{CJKfntef}
+\setCJKmonofont{AR PL KaitiM GB}
+\setCJKfamilyfont{song}{AR PL SungtiL GB}
 
 \usepackage{fancyhdr}
 \usepackage{color}
@@ -37,10 +38,16 @@ pdfauthor={Zhu Qun-Ying}]{hyperref}
 
 \usepackage{titlesec}
 \usepackage{amssymb}
-
+\usepackage{listings}
 \include{caption-zh}
+
 \begin{document}
 \urlstyle{rm}
+\lstset{language=[95]Ada,
+showstringspaces=false,
+extendedchars=true,
+stringstyle=\ttfamily,
+escapeinside=''}
 
 \title{{\textbf{\Huge{Ada 95 品质和风格}}}\\
 \huge{专业程序员的准则}}
@@ -93,5 +100,7 @@ ${}${}
 \input{readability}
 
 \input{bib}
+%\bibliographystyle{plain}
+%\bibliography{bib}
 
 \end{document}

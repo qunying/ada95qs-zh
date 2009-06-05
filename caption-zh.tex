@@ -25,6 +25,13 @@
 \renewcommand\tablename{列表}
 \renewcommand\listtablename{列表目录}
 \newcommand{\glemph}[1]{\noindent\textbf{#1}}
+\newcommand{\glentry}[1]{\vspace{1em}\glemph{#1}\par}
+\newenvironment{blockindent}{\list{}%
+   {\setlength{\listparindent}{\parindent}%
+    \setlength{\itemindent}{\listparindent}%
+    \setlength{\topsep}{0pt}}%
+    \item[]\relax}
+{\endlist}
 
 %% 调整章节标题
 \newcommand{\song}{\CJKfamily{song}}

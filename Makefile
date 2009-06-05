@@ -14,6 +14,7 @@
 .SUFFIXES: .tex .pdf
 
 LATEX=xelatex
+BIBTEX=bibtex
 DEP_FILES=caption-zh.tex copyright-notice.tex translator-preface.tex \
 preface.tex introduction.tex src-presentation.tex readability.tex \
 bib.tex
@@ -34,8 +35,10 @@ again3:
 	$(MAKE) again2
 
 %.pdf:%.tex $(DEP_FILES)
-	$(LATEX) $<
-	$(LATEX) $<
+	$(LATEX) $(TARGET)
+#	$(BIBTEX) $(TARGET)
+	$(LATEX) $(TARGET)
+#	$(LATEX) $(TARGET)
 
 view:
 	$(PDFVIWER) $(TARGET).pdf

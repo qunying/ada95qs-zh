@@ -16,29 +16,30 @@
 代码在纸张和屏幕上的版面规划对于代码的可读性起了很大的作用。本章包含了
 令代码更可读的呈现准则。
 
-在通用的准则之外，在\emph{实例}部分，还有特别的推荐。如果你不同意这些特别
-的推荐，你可以采用自己的规范，同时也遵守了准则。总之，保持全项目的一致。
+在通用的准则之外，在\glemph{具体事例}部分，还有特别的推荐。如果你不同意
+这些特别的推荐，你可以采用自己的规范，同时也遵守了准则。总之，保持全项目的一致。
 
 完全一致的版面规范很难靠人工去完成和检查，所以，对于版面规范的自动化，
 你可能比较细欢使用工具根据不同参数来格式化代码，或者把准则整合到自动代码
 模块。某些准则和特别的推荐不能用自动格式化工具完成，因为它们是基于 Ada 语句
-的语义而非语法。\emph{自动化注解}会给出更多的详细内容。
+的语义而非语法。\glemph{自动化注解}会给出更多的详细内容。
 
 \section{代码格式化}
 代码的格式化影响代码的观感，而不是代码的功用。这里讨论的问题包括：水平间隔、
 缩进、对齐、分页和行长度。最重要的准则是在编译单元和整个项目中保持一致。
 
 \subsection{水平间隔}
-\glemph{准则}
+\glentry{准则}
 \begin{itemize}
     \item 分割符之间使用固定的间隔。
     \item 使用和写一般文章一样的空格。
 \end{itemize} 
 
-\glemph{实例}
-\begin{itemize}%用 itemize 来达到缩进的目的，有更好的方法吗？
-    \item[] 特别指出，在下列地方，保留至少一个空格，本书中的范例也使用
-一样的准则。紧跟的准则会为了对齐的原因，可能需要更多的竖向空间。
+
+\glentry{具体事例}
+\begin{blockindent}
+特别指出，在下列地方，保留至少一个空格，本书中的范例也使用
+一样的准则。紧跟的准则会为了对齐的原因，可能需要更多的纵向空间。
     \begin{itemize}
 	\item[-] 在下列分隔符和二进制操作符的前后：
 	    \begin{quote}
@@ -52,5 +53,309 @@
 	    \end{tabular}
 	    }
 	    \end{quote}
+	\item[-] 除了禁止的地方，在字符串和字符引号(\texttt{"}) 和
+(\texttt{'})之外的文字。
+	\item[-] 在括号的外面，不是里面。
+	\item[-] 在逗号 (,) 和 分号 (;) 之后。
     \end{itemize}
+在下列的地方不要有任何空格，即使和上面的建议相背。
+    \begin{itemize}
+	\item[-] 当加号(+)和减号($-$)作为一元操作符时，它们的后面。
+	\item[-] 函数调用的后面。
+	\item[-] 在标签分隔符内 (\texttt{<< >>})。
+	\item[-] 在幂操作符(\texttt{**})、撇号(\texttt{'})和句号(.)的前后。
+	\item[-] 在多个连续的开启或终止括号中间。
+	\item[-] 在逗号 (,) 和 分号 (;) 之前。
+    \end{itemize}
+当多余的括号因为操作优先的规则被忽略，表达式中围绕最高优先级
+操作符的空格可选择性的去除。
+
+\end{blockindent}
+
+
+\glentry{范例}
+\begin{blockindent}
+\begin{lstlisting}
+Default_String : constant String :=
+      "This is the long string returned by" &
+      " default. It is broken into multiple" &
+      " Ada source lines for convenience.";
+
+type Signed_Whole_16 is range -2**15 .. 2**15 - 1;
+type Address_Area  is array (Natural range <>) of Signed_Whole_16;
+
+Register : Address_Area (16#7FF0# .. 16#7FFF#);
+Memory   : Address_Area (       0 .. 16#7FEC#);
+
+Register(Pc) := Register(A);
+
+X := Signed_Whole_16(Radius * Sin(Angle));
+
+Register(Index) := Memory(Base_Address + Index * Element_Length);
+
+Get(Value => Sensor);
+
+Error_Term := 1.0 - (Cos(Theta)**2 + Sin(Theta)**2);
+
+Z      := X**3;
+Y      := C * X + B;
+Volume := Length * Width * Height;
+\end{lstlisting}
+
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+分隔符和操作符通常只有一到两个字符的宽度，很容易在比较长的关键字和变量名
+中迷失，所以在它们周围加上空格是很好的注意。这让它们突出。代码中一致的空格
+也有助于视觉上的审视。
+
+但是，许多分隔符(逗号、分号、括号，等)是我们熟悉的普通标点符号。如果电脑程序
+代码中这些符号和一般的文本不一样，这很容易分散注意力。因此，使用和普通文本
+一样的空格规则 (在逗号、分号前没空格，括号内内空格，等等)。
+
+\end{blockindent}
+
+\glentry{异例}
+\begin{blockindent}
+唯一引人注目的异例是冒号 (:)。在 Ada 中，有时用它来做定位符或纵列分隔符
+(参见准则\ref{c:src:align})，在这种情形下，在它的前面和后面加入空格而不只是
+象普通文本那样加在后面，就显得有意义。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+本节里的准则很容易通过一个自动的代码格式器来实施。
+\end{blockindent}
+
+\subsection{缩进}
+\glentry{准则}
+\begin{itemize}
+    \item 缩进和对齐嵌套控制结构、连续行和嵌入单元，并保持一致。
+    \item 区分连续行和嵌套控制结构的缩进。
+    \item 使用空格作为缩进符，不要使用标记符 (tab 字符\cite{nissen84}
+\S{}2.2)。
 \end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+特别说明，推荐使用以下的缩进约定，本书中的范例都会使用。注意说明的最小缩进
+空间。紧跟的准则可能需要更多的纵向空间。
+\begin{itemize}
+    \item[-] 使用\cite{arm95} \S{}1.1.4 中推荐的分段法
+\footnote{\url{http://www.adaic.com/standards/95lrm/html/RM-1-1-4.html}}。
+    \item[-] 用3个空格作为嵌套的缩进的单位。
+    \item[-] 用2个空格作为连续行的缩进单位。
+\end{itemize}
+
+标签用3个空格来缩进：
+\begin{lstlisting}
+    begin
+    <<lable>>                     | <long statement with line break>
+       <statement>                |   <trailing part of same statement>
+    end;
+\end{lstlisting}
+\texttt{if}和简单循环语句：
+\begin{lstlisting}
+    if <condition> then           | <name>:
+       <statements>               |    loop
+    elsif <condition> then        |       <statements>
+       <statements>               |       exit when <condition>;
+    else                          |       <statements>
+       <statements>               |    end loop <name>;
+    end if;
+\end{lstlisting}
+\texttt{for}和\texttt{while}循环：
+\begin{lstlisting}
+    <name>:                       | <name>:
+       for <scheme> loop          |    while <condition> loop
+          <statemetns>            |       <statements>
+       end loop <name>;           |    end loop <name>;
+\end{lstlisting}
+块语句段落和\texttt{case}语句，正如\cite{arm95}中所推荐的：
+\begin{lstlisting}
+    <name>:			  | case <expression> is
+       declare			  |    when <choice> =>
+	  <declarations>	  |	  <statements>
+       begin			  |    when <choice> =>
+	  <statements>		  |	  <statements>
+       exception		  |    when others =>
+	  when <choice> =>	  |	  <statements>
+	     <statements>	  | end case; -- <comment>
+	  when others =>	  |
+	     <statements>	  |
+       end <name>;		  |
+\end{lstlisting}
+下面的\texttt{case}语句比\cite{arm95}的推荐节省一些空间，它依赖于较短的
+语句。无论你选择那种方式，要保持一致:
+\begin{lstlisting}
+    case <expression> is          | case <expression> is
+    when <choice> =>              |    when <choice> => <statements>
+	 <statements>             |                     <statements>
+    when <choice> =>              |    when <choice> => <statements>
+	 <statements>             |    when others   => <statements>
+    when others =>                | end case;
+	 <statements>             |
+    end case;                     |
+\end{lstlisting}
+各种形式的可选\texttt{accept}、计时和有条件导入(entry)调用:
+\begin{lstlisting}
+    select                        | select
+       when <guard> =>            |    <entry call>;
+          <accept statement>      |    <statements>
+          <statements>            | or
+    or                            |    delay <interval>;
+       <accept statement>         |    <statements>
+       <statements>               | end select;
+    or                            |
+       when <guard> =>            | select
+          delay <interval>;       |    <entry call>;
+          <statements>            |    <statements>
+    or                            | else
+       when <guard> =>            |    <statements>
+          terminate;              | end select;
+    else                          |
+       <statements>               | select
+    end select;                   |    <triggering alternative>
+                                  | then abort
+                                  |    <abortable part>
+                                  | end select;
+\end{lstlisting}
+\texttt{accept}语句:
+\begin{lstlisting}
+    accept <specification> do     | separate (<parent  unit>)
+       <statements>               | <proper body>
+    end <name>;                   |
+\end{lstlisting}
+一个子单元：
+\begin{lstlisting}
+    separate (<parent unit>)
+    <proper body>
+    end <name>;
+\end{lstlisting}
+程序单元的适当形式：
+\begin{lstlisting}
+    procedure <specification> is  | package body <name> is
+       <declarations>             |    <declarations>
+    begin                         | begin
+       <statements>               |    <statements>
+    exception                     | exception
+       when <choice> =>           |    when <choice>=>
+          <statements>            |       <statements>
+    end <name>;                   | end <name>;
+                                  |
+    function <specification>      | task body <name> is
+      return <type name> is       |    <declarations>
+       <declarations>             | begin
+    begin                         |    <statements>
+       <statements>               | exception
+    exception                     |    when <choice>=>
+       when <choice> =>           |       <statements>
+          <statements>            | end <name>;
+    end <name>;                   |
+\end{lstlisting}
+编译单元的语境语句使用列表形式。通用(\texttt{generic})行参不可以模糊
+单元本身。对函数、封包(pacakg)和任务(task)的规约使用标准缩进:
+\begin{lstlisting}
+    with <name>; use <name>;      | function <specification>
+    with <name>;                  |   return <type>;
+    with <name>;                  |
+                                  | package <name> is
+                                  |    <declarations>
+                                  | private
+    <compilation unit>            |    <declarations>
+                                  | end <name>;
+                                  |
+    generic                       | task type <name> is
+       <formal parameters>        |    <entry declarations>
+    <compilation unit>            | end <name>;
+
+\end{lstlisting}
+通用单元的实现和结构的缩进：
+\begin{lstlisting}
+    procedure <name> is             |type ... is
+       new <generic name> <actuals> |   record
+                                    |      <component list>
+    function <name> is              |      case <discriminant name> is
+      new <generic name> <actuals>  |          when <choice> =>
+                                    |             <component list>
+    package <name> is               |          when <choice> =>
+       new <generic name> <actuals> |             <component list>
+                                    |      end case;
+                                    |   end record;
+\end{lstlisting}
+\texttt{for}结构的对齐缩进：
+\begin{lstlisting}
+    for <name> use
+       record <mod clause>
+          <component clause>
+       end record;
+\end{lstlisting}
+标签类型和类型的扩展：
+\begin{lstlisting}
+    type ... is tagged
+       record
+          <component list>
+       end record;
+
+    type ... is new ... with
+       record
+          <component list>
+       end record;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{verbatim}
+Default_String : constant String :=
+      "This is the long string returned by" &
+      " default. It is broken into multiple" &
+      " Ada source lines for convenience.";
+   if Input_Found then
+      Count_Characters;
+   else -- not Input_Found
+      Reset_State;
+      Character_Total :=
+        First_Part_Total * First_Part_Scale_Factor +
+        Second_Part_Total * Second_Part_Scale_Factor +
+        Default_String'Length + Delimiter_Size;
+   end if;
+end loop;
+\end{verbatim}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+缩进是程序结构的可见标示，从而提高了代码的可读性。嵌套的层数由缩进
+可清晰的分辨出来，结构中开始和结束的关键字可视觉的匹配。
+
+尽管有许多关于用多少空格来缩进的讨论，缩进的目的是令代码清晰。代码
+缩进的一致比使用多少空格来缩进更重要。
+
+另外，\cite{ARM95}\S{}1.1.4 陈述推荐使用手册的例子和语法规则中用的版面规划
+作为 Ada 程序的代码版面规划:``语法规则中描述的结构的构建，使用的是推荐的
+分段法 …… 如果语法规则中的构建需要在不同的行上，构建会分行处理 …… 推荐所有的
+缩进使用基本缩进单元的倍数(基本单元中空格的数目没有定义)。''
+
+特别注意对连续行使用和嵌套控制结构不一样的缩进，这样它们会凸显出来，从而在
+审视代码时，不会朦胧了代码结构。
+
+语境语句列在不同的行使维护更加容易; 改变语境语句也不容易出错。
+
+使用空格来缩进比用标记符来得易移植，因为标记符在不同的终端和打印机可能显示
+不同。
+\end{blockindent}
+
+\glentry{异例}
+\begin{blockindent}
+如果你用变宽的字体，标记符比空格对齐的好。但是，依赖于你的标记符设置，相继
+的缩进行可能只留给你很短的长度。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+本节里的准则很容易通过一个自动的代码格式器来实施。
+\end{blockindent}
+
