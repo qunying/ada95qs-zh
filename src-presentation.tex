@@ -356,6 +356,146 @@ end loop;
 
 \glentry{自动化注解}
 \begin{blockindent}
-本节里的准则很容易通过一个自动的代码格式器来实施。
+本节里的准则很容易通过一个自动代码格式器来实施。
+\end{blockindent}
+
+\subsection{操作符的对齐}
+\glentry{准则}
+\begin{itemize}
+    \item 竖向对齐操作符，以突出当前程序结构和语意。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+if Slot_A >= Slot_B then
+   Temporary := Slot_A;
+   Slot_A    := Slot_B;
+   Slot_B    := Temporary;
+end if;
+----------------------------------------------------------------
+Numerator   := B**2 - 4.0 * A * C;
+Denominator := 2.0 * A;
+Solution_1 := (B + Square_Root(Numerator)) / Denominator;
+Solution_2 := (B - Square_Root(Numerator)) / Denominator;
+----------------------------------------------------------------
+X := A * B +
+     C * D +
+     E * F;
+Y := (A * B + C) +  (2.0 * D - E) -  -- basic equation
+     3.5;                            -- account for error factor
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+对齐使得操作符的位置更容易被看到，从视觉上强调了代码在干什么。
+
+在长表达式中换行和间隔，突出了条件、操作符的优先级和其它语意。它也
+为在表达式中加亮注释留出了空间。
+\end{blockindent}
+
+\glentry{特例}
+\begin{blockindent}
+如果竖向对齐使得一个语句被迫变成两行，特别是如果换行的地方并不合适,
+可以适当的放宽这条对齐的准则。
+\end{blockindent}
+
+\glentry{自动化注释}
+\begin{blockindent}
+前面的范例中，呈现一种``语意对齐''，通常自动代码格式器并不能做到或者
+保留。如果你根据语意把一个表达式分拆成多个部分，每个部分各占一行，
+以后使用自动代码格式器是要注意。整个表达式有可能变成一行，而注释都
+集中在后面。但是，如果那一行含有注释，某些足够聪明的格式器会保留换行。
+一个好的格式器可以识别出前面的范例没有违反准则，从而保留原样。
+\end{blockindent}
+
+\subsection{声明的对齐}
+\glentry{准则}
+\begin{itemize}
+    \item 用竖向对齐来使声明更可读。
+    \item 每行最多只提供一个声明。
+    \item 缩进在同一层声明部分的声明。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+对于没有被空行分隔的声明，请遵守下面的规则:
+    \begin{itemize}
+	\item[-] 对齐冒号分隔符。
+	\item[-] 对齐初始化分隔符 \texttt{:=}。
+	\item[-] 有句末注释时，对齐注释符。
+	\item[-] 当声明超出了一行，注意换行以及缩进被换行。换行的地方依次
+为： (1) 注释符; (2) 初始化分隔符; (3) 冒号分隔符。
+	\item[-] 对于无法在一行内完成的枚举类型，让每一个字面值占一行
+并缩进一级。当合适的时候，语意相关的字面值可以按行和列进行布置成为表格。
+    \end{itemize}
+\end{blockindent}
+
+\glentry{范例}
+\begin{blockindent}
+变量和常量的声明可以按\texttt{:}、\texttt{:=}和\texttt{--}进行分隔列表\\
+\begin{lstlisting}
+Prompt_Column : constant        := 40;
+Question_Mark : constant String := " ? "; -- prompt on error input
+Prompt_String : constant String := " ==> ";
+\end{lstlisting}
+如果这样令行太长，可以让每以部分分占一行，同时有自己唯一的缩进级别:
+\begin{verbatim}
+subtype User_Response_Text_Frame is String (1 .. 72);
+-- If the declaration needed a comment, it would fit here.
+Input_Line_Buffer : User_Response_Text_Frame
+       := Prompt_String &
+          String'(1 .. User_Response_Text_Frame'Length -
+                       Prompt_String'Length => ' ');
+\end{verbatim}
+枚举类型的声明，字面值可以用单列或多列成表:
+\begin{lstlisting}
+type Op_Codes_In_Column is
+      (Push,
+       Pop,
+       Add,
+       Subtract,
+       Multiply,
+       Divide,
+       Subroutine_Call,
+       Subroutine_Return,
+       Branch,
+       Branch_On_Zero,
+       Branch_On_Negative);
+\end{lstlisting}
+或节省空间:
+\begin{lstlisting}
+type Op_Codes_Multiple_Columns is
+      (Push,            Pop,               Add,
+       Subtract,        Multiply,          Divide,
+       Subroutine_Call, Subroutine_Return, Branch,
+       Branch_On_Zero,  Branch_On_Negative);
+\end{lstlisting}
+或突出相互关系的组别:
+\begin{lstlisting}
+type Op_Codes_In_Table is
+      (Push,            Pop,
+       Add,             Subtract,          Multiply,          Divide,
+       Subroutine_Call, Subroutine_Return,
+       Branch,          Branch_On_Zero,    Branch_On_Negative);
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+许多编程标准的文档，要求在单元前的注释中用表格的形式重复名字、类型、
+初始值和意义。这些注释是多余的，而且会变得和代码不符。将声明本身对齐
+为表格形式 (参见之前的范例)，为编译器和读者提供了同样的信息；执行每行
+最多只有一个声明；为初始化加空间和必要的注释以方便维护。表格化的版面
+增强可读性，避免名字在大量的声明中``隐藏''起来。这些对所有的声明都有效:
+类型、子类型、对象、异常、数字命名等等。
+
+\glentry{自动化注解}
+\begin{blockindent}
+本小节中的大部分准则都可以用自动代码格式器来实施。唯一的异例是范例中
+的枚举类型，它是根据字面值的语意来换行排版的。一个自动代码格式器不能
+做到，很可能会把枚举类型的字面值换到不同的行。但是，只是检查是否有违规
+的工具应该接受这种表格形式的枚举类型声明。
 \end{blockindent}
 
