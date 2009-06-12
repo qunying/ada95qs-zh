@@ -119,7 +119,7 @@ Volume := Length * Width * Height;
 \glentry{异例}
 \begin{blockindent}
 唯一引人注目的异例是冒号 (:)。在 Ada 中，有时用它来做定位符或纵列分隔符
-(参见准则\ref{c:src:align})，在这种情形下，在它的前面和后面加入空格而不只是
+(参见准则\ref{s:src:decl-align})，在这种情形下，在它的前面和后面加入空格而不只是
 象普通文本那样加在后面，就显得有意义。
 \end{blockindent}
 
@@ -147,7 +147,6 @@ Volume := Length * Width * Height;
     \item[-] 用3个空格作为嵌套的缩进的单位。
     \item[-] 用2个空格作为连续行的缩进单位。
 \end{itemize}
-
 标签用3个空格来缩进：
 \begin{lstlisting}
     begin
@@ -155,7 +154,7 @@ Volume := Length * Width * Height;
        <statement>                |   <trailing part of same statement>
     end;
 \end{lstlisting}
-\texttt{if}和简单循环语句：
+if和简单循环语句：
 \begin{lstlisting}
     if <condition> then           | <name>:
        <statements>               |    loop
@@ -165,14 +164,14 @@ Volume := Length * Width * Height;
        <statements>               |    end loop <name>;
     end if;
 \end{lstlisting}
-\texttt{for}和\texttt{while}循环：
+for和while循环：
 \begin{lstlisting}
     <name>:                       | <name>:
        for <scheme> loop          |    while <condition> loop
           <statemetns>            |       <statements>
        end loop <name>;           |    end loop <name>;
 \end{lstlisting}
-块语句段落和\texttt{case}语句，正如\cite{arm95}中所推荐的：
+语句段落块和case语句，正如\cite{arm95}中所推荐的：
 \begin{lstlisting}
     <name>:			  | case <expression> is
        declare			  |    when <choice> =>
@@ -186,7 +185,7 @@ Volume := Length * Width * Height;
 	     <statements>	  |
        end <name>;		  |
 \end{lstlisting}
-下面的\texttt{case}语句比\cite{arm95}的推荐节省一些空间，它依赖于较短的
+下面的case语句比\cite{arm95}的推荐节省一些空间，它依赖于较短的
 语句。无论你选择那种方式，要保持一致:
 \begin{lstlisting}
     case <expression> is          | case <expression> is
@@ -198,7 +197,7 @@ Volume := Length * Width * Height;
 	 <statements>             |
     end case;                     |
 \end{lstlisting}
-各种形式的可选\texttt{accept}、计时和有条件导入(entry)调用:
+各种形式的可选accept、计时和有条件导入(entry)调用:
 \begin{lstlisting}
     select                        | select
        when <guard> =>            |    <entry call>;
@@ -221,7 +220,7 @@ Volume := Length * Width * Height;
                                   |    <abortable part>
                                   | end select;
 \end{lstlisting}
-\texttt{accept}语句:
+accept语句:
 \begin{lstlisting}
     accept <specification> do     | separate (<parent  unit>)
        <statements>               | <proper body>
@@ -254,8 +253,8 @@ Volume := Length * Width * Height;
           <statements>            | end <name>;
     end <name>;                   |
 \end{lstlisting}
-编译单元的语境语句使用列表形式。通用(\texttt{generic})行参不可以模糊
-单元本身。对函数、封包(pacakg)和任务(task)的规约使用标准缩进:
+编译单元的语境语句使用列表形式。通用(generic)行参不可以模糊
+单元本身。对函数、封包(pacakage)和任务(task)的规约使用标准缩进:
 \begin{lstlisting}
     with <name>; use <name>;      | function <specification>
     with <name>;                  |   return <type>;
@@ -284,7 +283,7 @@ Volume := Length * Width * Height;
                                     |      end case;
                                     |   end record;
 \end{lstlisting}
-\texttt{for}结构的对齐缩进：
+for结构的对齐缩进：
 \begin{lstlisting}
     for <name> use
        record <mod clause>
@@ -308,7 +307,7 @@ Volume := Length * Width * Height;
 \glentry{范例}
 \begin{blockindent}
 \noindent
-\begin{verbatim}
+\begin{lstlisting}
 Default_String : constant String :=
       "This is the long string returned by" &
       " default. It is broken into multiple" &
@@ -323,7 +322,7 @@ Default_String : constant String :=
         Default_String'Length + Delimiter_Size;
    end if;
 end loop;
-\end{verbatim}
+\end{lstlisting}
 \end{blockindent}
 
 \glentry{原理}
@@ -334,7 +333,7 @@ end loop;
 尽管有许多关于用多少空格来缩进的讨论，缩进的目的是令代码清晰。代码
 缩进的一致比使用多少空格来缩进更重要。
 
-另外，\cite{ARM95}\S{}1.1.4 陈述推荐使用手册的例子和语法规则中用的版面规划
+另外，\cite{arm95}\S{}1.1.4 陈述推荐使用手册的例子和语法规则中用的版面规划
 作为 Ada 程序的代码版面规划:``语法规则中描述的结构的构建，使用的是推荐的
 分段法 …… 如果语法规则中的构建需要在不同的行上，构建会分行处理 …… 推荐所有的
 缩进使用基本缩进单元的倍数(基本单元中空格的数目没有定义)。''
@@ -393,10 +392,10 @@ Y := (A * B + C) +  (2.0 * D - E) -  -- basic equation
 对齐使得操作符的位置更容易被看到，从视觉上强调了代码在干什么。
 
 在长表达式中换行和间隔，突出了条件、操作符的优先级和其它语意。它也
-为在表达式中加亮注释留出了空间。
+为在表达式中标示注释留出了空间。
 \end{blockindent}
 
-\glentry{特例}
+\glentry{异例}
 \begin{blockindent}
 如果竖向对齐使得一个语句被迫变成两行，特别是如果换行的地方并不合适,
 可以适当的放宽这条对齐的准则。
@@ -412,6 +411,7 @@ Y := (A * B + C) +  (2.0 * D - E) -  -- basic equation
 \end{blockindent}
 
 \subsection{声明的对齐}
+\label{s:src:decl-align}
 \glentry{准则}
 \begin{itemize}
     \item 用竖向对齐来使声明更可读。
@@ -442,14 +442,14 @@ Question_Mark : constant String := " ? "; -- prompt on error input
 Prompt_String : constant String := " ==> ";
 \end{lstlisting}
 如果这样令行太长，可以让每以部分分占一行，同时有自己唯一的缩进级别:
-\begin{verbatim}
+\begin{lstlisting}
 subtype User_Response_Text_Frame is String (1 .. 72);
 -- If the declaration needed a comment, it would fit here.
 Input_Line_Buffer : User_Response_Text_Frame
        := Prompt_String &
           String'(1 .. User_Response_Text_Frame'Length -
                        Prompt_String'Length => ' ');
-\end{verbatim}
+\end{lstlisting}
 枚举类型的声明，字面值可以用单列或多列成表:
 \begin{lstlisting}
 type Op_Codes_In_Column is
@@ -499,3 +499,293 @@ type Op_Codes_In_Table is
 的工具应该接受这种表格形式的枚举类型声明。
 \end{blockindent}
 
+\subsection{更多对齐}
+\glentry{准则}
+\begin{itemize}
+    \item 竖向对齐形参模式和括号。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+特别推荐：
+\begin{itemize}
+    \item[-] 每行只放一个形式参数的规约。
+    \item[-] 竖向对齐形参的名字、冒号、保留字 in、保留字 out 和形参的类型。
+    \item[-] 把第一个形参放在子程序或入口名字的同一行。如果任何一个形参的类型
+超过了行长度限制，把第一个形参放在新的一行，并使用和连续行一样的缩进。
+\end{itemize}
+\end{blockindent}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+procedure Display_Menu (Title   : in     String;
+                        Options : in     Menus;
+                        Choice  :    out Alpha_Numerics);
+\end{lstlisting}
+下面的两个例子用本准则的另外的具体事例:
+\begin{lstlisting}
+procedure Display_Menu_On_Primary_Window
+      (Title   : in     String;
+       Options : in     Menus;
+       Choice  :    out Alpha_Numerics);
+\end{lstlisting}
+或：
+\begin{lstlisting}
+procedure Display_Menu_On_Screen (
+       Title   : in     String;
+       Options : in     Menus;
+       Choice  :     out Alpha_Numerics
+    );
+\end{lstlisting}
+对齐括号令复杂的关系表达式更加清晰：
+\begin{lstlisting}
+if not (First_Character in Alpha_Numerics and then
+        Valid_Option(First_Character))        then
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+这个准则促进可读性和理解性，也很容易由自动化工具达到。形参模式的对齐，产生了一个
+列表的效果，形参的名字、模式、类型、如果由必要，针对形参的注释。跨越同一编译单元
+内子程序的竖向对齐进一步增进了可读性。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+字程序的版面布局有许多可用的选择。上面的第二个例子对齐了所有子程序的形参名字。
+这样有个占用不需要行的缺点，如果子程序的名字比较短，只有一个形参，那看齐来难看，
+
+第三个例子的格式，通常用来减少形参被增加、删除或重组时需要的编辑。国号不需要随着
+行来变化。但是，最后一个形参行是唯一没有冒号的。
+\end{blockindent}
+
+\glentry{异例}
+\begin{blockindent}
+当一个操作符函数由两个以上同类型形参，在一行里列表声明形参比把形参分到不同行里
+更易读。
+\begin{lstlisting}
+type Color_Scheme is (Red, Purple, Blue, Green, Yellow, White, Black, Brown,
+		      Gray, Pink);
+function "&" (Left, Right : Color_Scheme) return Color_Scheme;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+本小节中的大部分准则都可以用自动代码格式器来实施。唯一的异例是最后一个范例中，
+用竖向对齐括号来突出表达式的条件。用自动代码格式器很难做到，除非相关的条件可以
+严格按照操作符的优先级来决定。
+\end{blockindent}
+
+\subsection{空行}
+\glentry{自动化注解}
+\begin{itemize}
+    \item 用空行来办逻辑上相关的文字组在一起 (\cite{nasa87})。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+if ... then
+
+   for ... loop
+      ...
+   end loop;
+
+end if;
+\end{lstlisting}
+这个例子把不同的类型声明用空行分割开来:
+\begin{lstlisting}
+type Employee_Record is
+   record
+      Legal_Name    : Name;
+      Date_Of_Birth : Date;
+      Date_Of_Hire : Date;
+      Salary        : Money;
+   end record;
+
+type Day is
+  (Monday,    Tuesday,   Wednesday, Thursday, Friday,
+   Saturday,  Sunday);
+
+subtype Weekday is Day range Monday   .. Friday;
+subtype Weekend is Day range Saturday .. Sunday;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+当空行在深思熟虑以及一致的情况下用时，相关的代码部分对于读者更明显。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+自动格式器并不能很好的实施这个准则，因为在决定在哪里插入空行和语意相关。
+怠驶，许多格式器能够保留以存在的空行，所以你可以手动加入空行，当你运行
+那样的格式器的时候，不会丢失你的改动。
+\end{blockindent}
+
+\subsection{分页}
+\glentry{准则}
+\begin{itemize}
+    \item 标示每一个封包或任务规约的顶端，每个程序单元体的顶端，和每个程序单元
+的末段。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+特别推荐：
+\begin{itemize}
+    \item[-] 用文件序言，规约标题，和体标题来标示那些\ref{s:read:comment}中推荐的
+结构。
+    \item[-] 用当前缩进同一列开始的划行，来标示在声明部分嵌套的单元定义。
+在定义之前和之后立即插入划行。
+    \item[-] 如果两个换行相邻，忽略较长的那个。
+\end{itemize}
+\end{blockindent}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+with Basic_Types;
+
+package body SPC_Numeric_Types is
+
+...
+
+    ---------------------------------------------------------------------
+    function Max
+	  (Left  : in    Basic_Types.Tiny_Integer;
+	   Right : in    Basic_Types.Tiny_Integer)
+	  return Basic_Types.Tiny_Integer is
+    begin
+       if Right < Left then
+          return Left;
+       else
+          return Right;
+       end if;
+    end Max;
+
+    ---------------------------------------------------------------------
+    function Min
+	  (Left  : in    Basic_Types.Tiny_Integer;
+	   Right : in    Basic_Types.Tiny_Integer)
+	  return Basic_Types.Tiny_Integer is
+    begin
+       if Left < Right then
+          return Left;
+       else
+          return Right;
+       end if;
+    end Min;
+
+    ---------------------------------------------------------------------
+
+    use Basic_Types;
+
+begin -- SPC_Numeric_Types
+   Max_Tiny_Integer := Min(System_Max, Local_Max);
+   Min_Tiny_Integer := Max(System_Min, Local_Min);
+   -- ...
+end SPC_Numeric_Types;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+不在当前页或屏幕的程序单元很容易被忽略。呈现用的硬件和软件之间，
+页长度变化很大。清楚的标示出程序逻辑页的边界(例如用划行)，读者
+可以快速的检查是否整个程序单元都可见。这样的分页，也更容易在大文件中，
+快速扫描到某个程序单元。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+本准则不是针对物理的``页'',因为那样的页的尺寸变化很多，没有一个单一准则
+可以适用。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+本节里的准则很容易通过一个自动代码格式器来实施。
+\end{blockindent}
+
+\subsection{一行里的语句个数}
+\glentry{准则}
+\begin{itemize}
+    \item 用新的一行开始每个语句。
+    \item 每行不要些超过一个简单语句。
+    \item 断开复合语句到多行。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+用：
+\begin{lstlisting}
+if End_Of_File then
+   Close_File;
+else
+   Get_Next_Record;
+end if;
+\end{lstlisting}
+不要用：
+\begin{lstlisting}
+if End_Of_File then Close_File; else Get_Next_Record; end if;
+\end{lstlisting}
+异例情况：
+\begin{lstlisting}
+Put("A="); Natural_IO.Put(A); New_Line;
+Put("B="); Natural_IO.Put(B); New_Line;
+Put("C="); Natural_IO.Put(C); New_Line;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+每行一个语句增强了读者找到某些语句的能力，有助于避免漏了某些语句。同样的，
+如果复合语句的构件在不同的行上，它的结构更清晰。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+如果一个语句比一行里剩下的空间要长，在下一行继续。本准则适用于声明、语境子句
+和子程序形参。
+
+据\cite{arm95}\S{}1.1.4 描述``最好在分号之后换行。''
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+本节里的准则很容易通过一个自动代码格式器来实施。唯一的异例是最后那个例子，
+呈现了多个语句在语意组合成一行。
+\end{blockindent}
+
+\glentry{异例}
+\begin{blockindent}
+Put 和 New\_Line 语句的例子，呈现了一个合理的异例。把这些有紧密关系的语句
+组合在一行，使组之间的结构关系更清晰。
+\end{blockindent}
+
+\subsection{源代码行长度}
+\glentry{准则}
+\begin{itemize}
+    \item 坚持一个源代码的最大行长度 (\cite{nissen84} \S{}2.3)。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+特别推荐：
+\begin{itemize}
+    \item[-] 用72个字符作为行长度的最大值。
+\end{itemize}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+当把Ada程序从一个系统移植到另一个系统，也许
+\end{blockindent}
