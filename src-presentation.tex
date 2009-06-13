@@ -581,7 +581,7 @@ function "&" (Left, Right : Color_Scheme) return Color_Scheme;
 \end{blockindent}
 
 \subsection{空行}
-\glentry{自动化注解}
+\glentry{准则}
 \begin{itemize}
     \item 用空行来办逻辑上相关的文字组在一起 (\cite{nasa87})。
 \end{itemize}
@@ -787,5 +787,47 @@ Put 和 New\_Line 语句的例子，呈现了一个合理的异例。把这些�
 
 \glentry{原理}
 \begin{blockindent}
-当把Ada程序从一个系统移植到另一个系统，也许
+当把Ada程序从一个系统移植到另一个系统，对于源代码的语句行可能有记录的限制，
+可能的原因有：某些操作系统的磁带输入输出可能不支持变长的记录，或者某些
+80列的打印机或终端不支持换行。更多的原理参见准则
+\ref{s:portability:global-assum}。
+
+由于各种原因，有可能需要发行源代码，纸张对于可用的列没有电脑那样宽容。
+
+另外，阅读代码时，人本身对理解视野内的代码也有宽度的局限，这个局限大概
+在70到80列之间。
 \end{blockindent}
+
+\glentry{异例}
+\begin{blockindent}
+也可以用79个字符作为代码的行长度限制。79个字符宽度使得代码和 FORTAN 的
+72个字符限制区分开来。它也避免了某些80列的终端对最后一列的显示问题。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+本节里的准则很容易通过一个自动代码格式器来实施。
+\end{blockindent}
+
+\section{总结}
+\glentry{代码格式化}
+\begin{itemize}
+    \item 分割符之间使用固定的间隔。
+    \item 使用和写一般文章一样的空格。
+    \item 缩进和对齐嵌套控制结构、连续行和嵌入单元，并保持一致。
+    \item 区分连续行和嵌套控制结构的缩进。
+    \item 使用空格作为缩进符，不要使用标记符 (tab 字符\cite{nissen84}
+    \item 竖向对齐操作符，以突出当前程序结构和语意。
+    \item 用竖向对齐来使声明更可读。
+    \item 每行最多只提供一个声明。
+    \item 缩进在同一层声明部分的声明。
+    \item 竖向对齐形参模式和括号。
+    \item 用空行来办逻辑上相关的文字组在一起 (\cite{nasa87})。
+    \item 标示每一个封包或任务规约的顶端，每个程序单元体的顶端，和每个程序单元
+的末段。
+    \item 用新的一行开始每个语句。
+    \item 每行不要些超过一个简单语句。
+    \item 断开复合语句到多行。
+    \item 坚持一个源代码的最大行长度 (\cite{nissen84} \S{}2.3)。
+\end{itemize}
+

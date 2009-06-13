@@ -14,3 +14,157 @@
 \chapter{可读性}
 \label{c:readability}
 
+本章推荐如何使用Ada的功能，使得代码更易阅读和理解。有许多有关注释和可读性的
+迷思。命名和代码结构比注释对真正的可读性承担更多的责任。拥有和代码一样多
+的注释并不代表可读性；它更可能是作者不理解什么是需要沟通的重要部分。
+
+\section{拼写}
+源代码中的拼写规则包括大写、下划线的应用、数字和缩写。如果你一致遵循这些规则，
+那写出来的代码就会更清晰和易读。
+
+\subsection{下划线的应用}
+\glentry{准则}
+\begin{itemize}
+    \item 用下划线分隔复合名字中的词。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+Miles_Per_Hour
+Entry_Value
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+当一个标识符包括多个词，如果用下划线分隔词，那会更容易阅读。事实上，
+英语中也有这样的惯例，复合词用练字符或空格分隔。另外，为了促进代码的
+可读性，如果在名字中用下划线，代码格式器对于大小写有更多的控制。
+参见准则\ref{s:readability:cap}。
+\end{blockindent}
+
+\subsection{数字}
+\glentry{准则}
+\begin{itemize}
+    \item 使用一致的风格来呈现数字。
+    \item 使用对问题适当的根植来呈现字面值。
+    \item 使用下划线来分隔数字，就像在普通文字中用逗号或句号
+(或对于非十进制用空格)。
+    \item 当使用科学标示法，用一致的大写或小写的E。
+    \item 在非十进制数字中，要么使用全大写或小写来标示其中的字母。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+\noindent
+\begin{itemize}
+    \item[-] 十进制或八进制数字，在小数点的左边，每三个数字一组，在右边，
+每五个数字一组。
+    \item[-] 科学标示中，总用大写字母E。
+    \item[-] 用大写字母表示在十以上进制的数字。
+    \item[-] 十六进制数字，小数点两边都是每四个数字一组。
+\end{itemize}
+\end{blockindent}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+type Maximum_Samples     is range          1 .. 1_000_000;
+type Legal_Hex_Address   is range   16#0000# ..   16#FFFF#;
+type Legal_Octal_Address is range 8#000_000# .. 8#777_777#;
+
+Avogadro_Number : constant := 6.02216_9E+23;
+\end{lstlisting}
+用一下方式表示常量$1/3$:
+\begin{lstlisting}
+One_Third : constant := 1.0 / 3.0;
+\end{lstlisting}
+或
+\begin{lstlisting}
+One_Third_Base_3 : constant := 3#0.1#;
+\end{lstlisting}
+不要用:
+\begin{lstlisting}
+One_Third_As_Decimal_Approximation : constant := 0.33333_33333_3333;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+大写或小写字母的一致使用，有助于搜索数字。用下划线来把数字组成熟悉的模式。
+与平时使用模式的一致是可读性的一大要素。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+如果一个分数用一个它可以终止的基数进制来表示，而不用一个重复的表示法，就象
+上面例子中的\texttt{3\#0.1\#}，在转换到机器的基数时，有可能更精确。
+\end{blockindent}
+
+\subsection{大写}
+\label{s:readability:cap}
+\glentry{准则}
+\begin{itemize}
+    \item 让保留字和程序的其他组件从视觉上分开。
+\end{itemize}
+\glentry{具体事例}
+\begin{blockindent}
+\noindent
+\begin{itemize}
+    \item[-] 所有保留字用小写 (当用做保留字时)。
+    \item[-] 所有其他标识符混用大小写，每个词用一个大写字母开始，
+并用下划线分开。
+    \item[-] 用大写字母表示缩略语或首写字母缩写 (见自动化注释)。
+\end{itemize}
+\end{blockindent}
+\glentry{范例}
+\begin{blockindent}
+\noindent
+\begin{lstlisting}
+...
+
+type Second_Of_Day      is range 0 .. 86_400;
+type Noon_Relative_Time is (Before_Noon, After_Noon, High_Noon);
+
+subtype Morning   is Second_Of_Day range 0 .. 86_400 / 2 - 1;
+subtype Afternoon is Second_Of_Day range Morning'Last + 2 .. 86_400;
+
+...
+
+Current_Time := Second_Of_Day(Calendar.Seconds(Calendar.Clock));
+
+if Current_Time in Morning then
+    Time_Of_Day := Before_Noon;
+elsif Current_Time in Afternoon then
+    Time_Of_Day := After_Noon;
+else
+    Time_Of_Day := High_Noon;
+end if;
+
+case Time_Of_Day is
+    when Before_Noon =>   Get_Ready_For_Lunch;
+    when High_Noon   =>   Eat_Lunch;
+    when After_Noon  =>   Get_To_Work;
+end case;
+
+...
+\end{lstlisting}
+\end{blockindent}
+
+\section{总结}
+\glentry{拼写}
+\noindent
+\begin{itemize}
+    \item 用下划线分隔复合名字中的词。
+    \item 使用一致的风格来呈现数字。
+    \item 使用对问题适当的根植来呈现字面值。
+    \item 使用下划线来分隔数字，就像在普通文字中用逗号或句号
+(或对于非十进制用空格)。
+    \item 当使用科学标示法，用一致的大写或小写的E。
+    \item 在非十进制数字中，要么使用全大写或小写来标示其中的字母。
+    \item 让保留字和程序的其他组件从视觉上分开。
+\end{itemize}
+
