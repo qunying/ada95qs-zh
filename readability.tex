@@ -1,7 +1,7 @@
 % -*- coding: utf-8 -*-
 % Ada 95 品质和风格
-% 版权所有 (C) 2009, 朱群英
-% Copyright (C) 2009, Zhu Qun-Ying
+% 版权所有 (C) 2009,2010, 朱群英
+% Copyright (C) 2009,2010, Zhu Qun-Ying
 %
 % 本书的 TeX 代码和由之生成的 ps，pdf，html，等其他格式的文件
 % 遵循 GNU通用公共授权第三版或其后的版本。
@@ -154,6 +154,210 @@ end case;
 \end{lstlisting}
 \end{blockindent}
 
+\glentry{原理}
+\begin{blockindent}
+视觉上把保留字突出来，让你集中精力在程序结构上，同时有助于扫描某个
+标识符。
+
+这里选择的具体事例对于有经验的 Ada 程序员更容易阅读，他不需要保留字
+在页面上的突出。 语言的初学者常常发觉保留字的突出有助于他们更
+容易的理解控制结构。 因此，学习班的教师和介绍 Ada 语言的书籍可以采用
+另一种实现。 \cite{arm95} 选用粗体小写字母来书写所有的保留字。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+Ada 的名字是忽略大小写的。所以象 \texttt{max\_limit}、\texttt{MAX\_LIMIT}、
+\texttt{Max\_Limit} 表示一样的对象或实体。只要词之间用下划线分隔，一个好的
+代码格式器可以自动从一种风格转换到另一种。
+
+正如\ref{read:abbr} 中所推荐，缩写应该是项目层的。自动化的工具应该允许一个项目
+列出它的缩写并格式他们。
+
+\end{blockindent}
+
+\subsection{缩写}
+\label{c:readability:abbr}
+\glentry{准则}
+\begin{itemize}
+    \item 如果一个短小的同义词存在，不要使用长词语的缩写。
+    \item 用一致的缩写策略。
+    \item 不要用有多种解释的缩写。
+    \item 缩写必须比原词节省了许多字符，以认可它的使用。
+    \item 使用应用领域通用的缩写。
+    \item 维护一个缩写列表，只使用列表中的缩写。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+用 \texttt{Time\_Of\_Recipt} 比用 \texttt{Recd\_Time} 或 \texttt{R\_Time}
+要好。
+但是，对于经常需要处理达到军事标准要求的信息格式， \texttt{DOD\_STD\_MSG\_FMT}
+是 \texttt{Department\_Of\_Defense\_Standard\_Message\_Format}
+\footnote{国防部信息格式标准} 可接受的缩写。
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+许多缩写需要结合上下文才不会模糊和不明确。例如，\texttt{Temp} 可以是
+临时 (temporary) 或温度 (temperature)。因此，当你需要用到缩写时，要小心的
+选择。准则 \ref{c:resuability:abbr} 的原理中就上下文如何影响缩写的使用有
+更加彻底的讨论。
+
+因为非常长的变量名会遮蔽程序结构，特别是在缩进的深层嵌套的控制结构中，所以
+要尽量让变量名短而有意义。如果可能，尽量的使用短而不用缩写的名字。如果没有
+合适的短变量名，那么众所周知的缩写是下一个最好的选择，特别是整个项目都在
+使用的标准缩写列表中的名字。
+
+使用 \texttt{rename} 语句，你可以对一个全名建立缩写。这是个很有用的功能，
+当在一段本地代码中，一个出现多次的非常长的全名因而可以简化 (参见准则
+\cite{c:pratice:rename})。
+
+项目中，一个可接受的缩写列表提供了使用这些缩写的标准语境。
+\end{blockindent}
+
+\section{命名约定}
+选择一个可以有助表达对象或实体运用的名字。 Ada 允许任意长度的标志符，
+只要标志符所有的有效字符(含下划线)可以在一行内。 标志符就是是变量、常量、
+程序单元或程序中其他实体的名字。
+
+\subsection{名字}
+
+\glentry{准则}
+\begin{itemize}
+    \item 尽量选择可以自我说明的名字。
+    \item 使用短的同义词而不用缩写 (参见准则\ref{c:readability:abbr})。
+    \item 使用应用的名词，但是不要用偏僻的术语。
+    \item 避免使用同一个名字来声明不同类型的标识符。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+在一个树遍历中，用 \texttt{Left} 在这个语境中已经足够表达它的意思，不用
+\texttt{Left\_Branch}。然而，要用 \texttt{Time\_Of\_Day} 而不是 \texttt{TOD}。
+
+数学公式往往用单个字符来命名变量。在程序中，对于数学公式继续这个约定，这样
+它们可以提示公式，例如：
+\begin{lstlisting}
+    A * (X**2) + B * X + C
+\end{lstlisting}
+当使用子包的时候，如果包、子单元或标志符的名字选的不好，有可能导致与子单元
+的可见性冲突。\cite{rational95} (\textsection{8.1})有个因此而变得
+很晦涩的代码。
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+遵循这些准则的程序很容易被理解。自我说明的名字需要更少的注释说明。经验表明，
+如果你的变量名没有过度的长，你可以进一步增加程序的可理解性 (\cite{sch86}, 7)。
+上下文和应用域可以提供很多帮助。 数字实体的测量单位是一个子类型名字的来源。
+
+要尽量避免在不同的声明中用同一个名字作为标志符，例如一个对象和一个子包。
+在表面上看起来不同的名字空间过度使用同一个标识符，如果这些程序单元要
+在一些工作，实际上会导致可见性冲突。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+参见准则\ref{c:resuability:abbr} 有个关于如何用应用领域作为选择缩写的指南。
+\end{blockindent}
+
+\subsection{子类型名字}
+\glentry{准则}
+\begin{itemize}
+    \item 使用单数、泛指的名词作为子类型标志符。
+    \item 选用能说明子类型值的标志符。
+    \item 对定义可见的访问类型、子界、数组，考虑在子类型标志符中用后缀。
+    \item 对私有类型，不要使用针对子类型标志符的构造规则 (例如加后缀)。
+    \item 不要使用预定义包中的子类型名字。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\begin{lstlisting}
+type Day is
+   (Monday,    Tuesday,   Wednesday, Thursday, Friday,
+    Saturday,  Sunday);
+type Day_Of_Month    is range      0 ..    31;
+type Month_Number    is range      1 ..    12;
+type Historical_Year is range -6_000 .. 2_500;
+
+type Date is
+   record
+      Day   : Day_Of_Month;
+      Month : Month_Number;
+      Year  : Historical_Year;
+   end record;
+\end{lstlisting}
+特别指出，\texttt{Day} 应该优先于 \texttt{Days} 或 \texttt{Day\_Type} 的使用。
+
+标志符 \texttt{Historical\_Year} 也许看起来象特指，但实际是泛指的，形容词
+\texttt{historical} 说明了范围的限制。
+\begin{lstlisting}
+------------------------------------------------------------------------
+procedure Disk_Driver is
+   -- In this procedure, a number of important disk parameters are
+   -- linked.
+   Number_Of_Sectors  : constant :=      4;
+   Number_Of_Tracks   : constant :=   200;
+   Number_Of_Surfaces : constant :=    18;
+   Sector_Capacity    : constant := 4_096;
+
+   Track_Capacity   : constant := Number_Of_Sectors  * Sector_Capacity;
+   Surface_Capacity : constant := Number_Of_Tracks   * Track_Capacity;
+   Disk_Capacity    : constant := Number_Of_Surfaces * Surface_Capacity;
+
+   type Sector_Range  is range 1 .. Number_Of_Sectors;
+   type Track_Range   is range 1 .. Number_Of_Tracks;
+   type Surface_Range is range 1 .. Number_Of_Surfaces;
+
+   type Track_Map   is array (Sector_Range)  of ...;
+   type Surface_Map is array (Track_Range)   of Track_Map;
+   type Disk_Map    is array (Surface_Range) of Surface_Map;
+begin -- Disk_Driver
+   ...
+end Disk_Driver;
+------------------------------------------------------------------------
+\end{lstlisting}
+后缀 \texttt{\_Capacity}、\texttt{\_Range}和\texttt{\_Map} 帮助定义了上述
+子类型的目的，避免了寻找抽象 sector, track 和 surface 的同义词。没有了这些
+后缀，对每一个抽象你需要三个不同的名字来说明每个简洁后缀名中所描述的概念。
+这个建议只对那些可见的子类型。对于私有类型，应该被赋予一个能反应抽象代表的
+好名字。
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+当使用这个风格和建议的对象标志符风格时，程序代码更相似于英文
+(参见准则\ref{c:readability:obj})。另外，这个风格和语言预定义的标志符名字
+保持了一致。它们并没有被命名为 \texttt{Integers}, \texttt{Booleans},
+\texttt{Interger\_Type} 或 \texttt{Boolean\_Tyoe}。
+
+但是，如果使用预定义包中的子类型名，当子类型出现在某处而没有包限定的话，
+一定会弄糊涂程序员。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+这个风格准则试图和 \cite{arm95} 在对术语 ``type (类型）''
+和 ``subtype (子类型) 名字'' 的使用上保持一致。通常 ``类型'' 指一个抽象的
+概念，如在类型声明中，而 ``子类型'' 指在实际声明中赋予抽象概念的名字。所以
+在 \cite{arm83} 中的类型现在是子类型。
+\end{blockindent}
+
+\subsection{对象名字}
+\glentry{准则}
+\begin{itemize}
+    \item 对于逻辑对象 使用断定语或从属的名字。
+    \item 使用单数、泛指的名词作为对象标志符。
+    \item 选用能说明对象执行时的值的标识符。
+    \item 使用单数、泛指的名词作记录的组件。
+\end{itemize}
+
+\section{注释}
+
+\section{使用类型}
+
 \section{总结}
 \glentry{拼写}
 \noindent
@@ -166,5 +370,29 @@ end case;
     \item 当使用科学标示法，用一致的大写或小写的E。
     \item 在非十进制数字中，要么使用全大写或小写来标示其中的字母。
     \item 让保留字和程序的其他组件从视觉上分开。
+    \item 如果一个短小的同义词存在，不要使用长词语的缩写。
+    \item 用一致的缩写策略。
+    \item 不要用有多种解释的缩写。
+    \item 缩写必须比原词节省了许多字符，以认可它的使用。
+    \item 使用应用领域通用的缩写。
+    \item 维护一个缩写列表，只使用列表中的缩写。
+\end{itemize}
+
+\glentry{命名约定}
+\noindent
+\begin{itemize}
+    \item 尽量选择可以自我说明的名字。
+    \item 使用短的同义词而不用缩写。
+    \item 使用应用的名词，但是不要用偏僻的术语。
+    \item 避免使用同一个名字来声明不同类型的标识符。
+    \item 使用单数、泛指的名词作为子类型标志符。
+    \item 选用能说明子类型值的标志符。
+    \item 对定义可见的访问类型、子界、数组，考虑在子类型标志符中用后缀。
+    \item 对私有类型，不要使用针对子类型标志符的构造规则 (例如加后缀)。
+    \item 不要使用预定义包中的子类型名字。
+    \item 对于逻辑对象 使用断定语或从属的名字。
+    \item 使用单数、泛指的名词作为对象标志符。
+    \item 选用能说明对象执行时的值的标识符。
+    \item 使用单数、泛指的名词作记录的组件。
 \end{itemize}
 
