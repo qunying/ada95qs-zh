@@ -263,6 +263,7 @@ Ada 的名字是忽略大小写的。所以象 \texttt{max\_limit}、\texttt{MAX
 \end{blockindent}
 
 \subsection{子类型名字}
+\label{c:readability:subtype}
 \glentry{准则}
 \begin{itemize}
     \item 使用单数、泛指的名词作为子类型标志符。
@@ -348,13 +349,338 @@ end Disk_Driver;
 \subsection{对象名字}
 \glentry{准则}
 \begin{itemize}
-    \item 对于逻辑对象 使用断定语或从属的名字。
+    \item 对于逻辑对象 使用判断语或从属的名字。
     \item 使用单数、泛指的名词作为对象标志符。
     \item 选用能说明对象执行时的值的标识符。
     \item 使用单数、泛指的名词作记录的组件。
 \end{itemize}
 
+\glentry{范例}
+\begin{blockindent}
+\noindent
+非逻辑对象:
+\begin{lstlisting}
+  Today           : Day;
+  Yesterday       : Day;
+  Retirement_Date : Date;
+\end{lstlisting}
+逻辑对象:
+\begin{lstlisting}
+  User_Is_Available : Boolean; -- predicate clause
+  List_Is_Empty     : Boolean; -- predicate clause
+  Empty             : Boolean; -- adjective
+  Bright            : Boolean; -- adjective
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+使用针对对象的名词建立了理解对象值的语境，这正是有关子类型命名的一点
+(参见准则\ref{c:readability:subtype})。这种风格下，对象的声明很像英文。
+例如，上面的第一个声明可读为着者``Today is Day''。
+
+泛指的名词用在记录的组件命名，因为一个记录的对象名会提供理解组件的语境。
+因此，下面的组件可理解为``the year of retirement (退休的年份)'':
+\begin{lstlisting}
+    Retirement_Date.Year
+\end{lstlisting}
+把对象类型和语言联系起来，可以是代码看起来更像文本。例如，因为选取了恰当
+的名字，下面的代码不需要注释:
+\begin{lstlisting}
+    if List_Is_Empty then
+       Number_Of_Elements := 0;
+    else
+       Number_Of_Elements := Length_Of_List;
+    end if;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+如果很难找到一个合适的名词来声明一个对象在整个执行期间的值，这个对象很可能
+服务于多个目的。这种情况下，应该用多个对象。
+\end{blockindent}
+
+\subsection{标签类型和相对应包的命名}
+\label{c:readability:tag}
+\glentry{准则}
+\begin{itemize}
+    \item 使用一致的命名约定来对标签类型和相对应包命名。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{blockindent}
+命名约定点燃了``信仰战争''; 因此，这里展现展了两种具体实例。第一种实例集成了
+面向对象的使用特性。除了两种特殊情况，它在声明种使用同一命名约定，不管是否
+用到了面向对象的特性:
+\begin{itemize}
+    \item[-] 对标签类型和子类型的命名一致
+(参见准则\ref{c:readability:subtype})。
+    \item[-] 对于导出会有多个实现的抽象 (参见准则\ref{c:oof:abstract}) 的包，
+使用前缀 \texttt{Abstract\_}。
+    \item[-] 对于提供可以和主要抽象``mixed in (混合)''的功能单元的包，
+用后缀 \texttt{\_Mixin}。
+\end{itemize}
+第二种实现用特殊的名字和后缀来突出面向对象的特性的使用:
+\begin{itemize}
+    \item[-] 用代表的对象来命名类包，不用后缀 (\cite{rosen95})。
+    \item[-] 用混合包所代表的一面类命名，用后缀 \texttt{\_Facet}
+	     (\cite{rosen95})。
+    \item[-] 用 \texttt{Instance} 命名主标签类型。
+    \item[-] 沿用某个类型的声明，对应的类程子类型用 \texttt{Class}。
+\end{itemize}
+\end{blockindent}
+
+\glentry{范例}
+\begin{blockindent}
+下面的两组从\cite{rational95} (\textsection{4.4.4}, \textsection{4.6.2})
+中选出的例子，使用了第一种命名约定。
+
+在第一组的例子种，假设 \texttt{Set\_Element} 已经在别的地方声明过了:
+\begin{lstlisting}
+  package Abstract_Sets is
+     type Set is abstract tagged private;
+     -- empty set
+     function Empty return Set is abstract;
+     -- build set with 1 element
+     function Unit (Element: Set_Element) return Set is abstract;
+     -- union of two sets
+     function Union (Left, Right: Set) return Set is abstract;
+     -- intersection of two sets
+     function Intersection (Left, Right: Set) return Set is abstract;
+     -- remove an element from a set
+     procedure Take (From      : in out Set;
+                      Element :     out set_Element) is abstract;
+     Element_Too_Large : exception;
+  private
+     type Set is abstract tagged null record;
+  end Abstract_Sets;
+  with Abstract_Sets;
+  package Bit_Vector_Sets is     -- one implementation of set abstraction
+     type Bit_Set is new Abstract_Sets.Set with private;
+     ...
+  private
+     Bit_Set_Size : constant := 64;
+     type Bit_Vector is ...
+     type Bit_Set is new Abstract_Sets.Set with
+         record
+            Data : Bit_Vector;
+         end record;
+  end Bit_Vector_Sets;
+  with Abstract_Sets;
+  package Sparse_Sets   -- alternate implementation of set abstraction
+     type Sparse_Set is new Abstract_Sets.Set with private;
+     ...
+  private
+     ...
+  end Bit_Vector_Sets;
+\end{lstlisting}
+
+第二组例子是个支持视窗系统的混合包，应用了混合包的命名约定:
+\begin{lstlisting}
+  -- assume you have type Basic_Window is tagged limited private;
+  generic
+     type Some_Window is abstract new Basic_Window with private;
+  package Label_Mixin is
+     type Window_With_Label is abstract new Some_Window with private;
+     ...
+  private
+     ...
+  end Label_Mixin;
+  generic
+     type Some_Window is abstract new Basic_Window with private;
+  package Border_Mixin is
+     type Window_With_Label is abstract new Some_Window with private;
+     ...
+  private
+     ...
+  end Border_Mixin;
+\end{lstlisting}
+
+下面的例子应用了第二种命名约定，是\cite{rosen95}中讨论的:
+\begin{lstlisting}
+  package Shape is
+     subtype Side_Count is range 0 .. 100;
+     type Instance (Sides: Side_Count) is tagged private;
+     subtype Class is Instance'Class;
+     . . .
+     -- operations on Shape.Instance
+  private
+     . . .
+  end Shape;
+
+  with Shape; use Shape;
+  package Line is
+     type Instance is new Shape.Instance with private;
+     subtype Class is Instance'Class;
+     . . .
+     -- Overridden or new operations
+  private
+     . . .
+  end Line;
+  with Shape; use Shape;
+  generic
+     type Origin is new Shape.Instance;
+  package With_Color_Facet is
+     type Instance is new Origin with private;
+     subtype Class is Instance'Class;
+     -- operations for colored shapes
+  private
+     . . .
+  end With_Color_Facet;
+  with Line; use Line;
+  with With_Color_Facet;
+  package Colored_Line is new With_Color_Facet (Line.Instance);
+\end{lstlisting}
+声明看起来会是这样:
+\begin{lstlisting}
+  Red_Line : Colored_Line.Instance;
+  procedure Draw (What : Shape.Instance);
+\end{lstlisting}
+上述方案在用全名或用 \texttt{use} 语句都工作。只要你用同样的名字来
+表示所有的类型和类程类型，没有确认的名字总是相互隐藏。因此，编译器会
+要求你使用全名称来解决用\texttt{use} 语句所带来的多义性 \cite{rosen95}。
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+你应采用一个一致、可读、传达抽象意图的命名方案。理想状况下，命名方案应统一
+处理从不同方法用标签类型生成类别。如果命名约定太死板，从可读性的角度看，
+那你写的代码片段会不自然。对于推导或通用混合的(\ref{c:oof:mul-inh}
+类型夸展使用相近的命名约定，对象和过程的声明变得可读。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+类的命名约定在面向对象的抽象和其他抽象间画了一条分界线。工程师们已经用 Ada 83
+(\cite{arm83}) 定义抽象数据类型有十多年了，你并不想只是为了使用某个类型的
+类型扩展而改变命名约定。你必须考虑所有在程序里使用的抽象中，继承有多重要。
+一般情况下，如果你喜欢突出抽象，而不是实现抽象的机制 (例如：继承、类型夸展
+以及多态), 也许你并不想强加这么一个苛刻的命名约定。一个平滑的从开发没有继承的
+抽象过渡到开发有继承的抽象的命名约定，不会影响质量。
+
+如果你选用了突出使用面向对象特性的命名约定，而之后有想改变声明到不用
+面向对象特性，这个改变也许会代价高昂。你必须更换所有出现的名字，并且不引入
+别的错误。如果你选用了一个命名约定，禁止使用前、后缀来描述声明的特性，你
+失去了一个传递声明使用意图的机会。
+\end{blockindent}
+
+\subsection{程序单元的名字}
+\glentry{准则}
+\begin{itemize}
+    \item 用行动的动词来命名过程和入口。
+    \item 用判断式的子句命名逻辑函数。
+    \item 用名词命名非逻辑函数。
+    \item 给包的名字要暗含比子程序高级的组构。通常来说，这都是描述供应的抽象的
+名词。
+    \item 给任务命名隐含活动的实体。
+    \item 用描述被保护数据的名词来命名保护单元。
+    \item 把通用子程序当做非通用子程序来命名。
+    \item 把通用包当做非通用包来命名。
+    \item 通用名字应给比例示的名字更广泛。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\noindent
+下面是些一个Ada程序的构成元素的名字样本：
+
+过程名字样本:
+\begin{lstlisting}
+    procedure Get_Next_Token -- get is a transitive verb
+    procedure Create         -- create is a transitive verb
+\end{lstlisting}
+
+逻辑函数名字样本:
+\begin{lstlisting}
+    function Is_Last_Item -- predicate clause
+    function Is_Empty     -- predicate clause
+\end{lstlisting}
+
+非逻辑函数名字样本:
+\begin{lstlisting}
+    function Successor -- common noun
+    function Length    -- attribute
+    function Top       -- component
+\end{lstlisting}
+
+包名字样本:
+\begin{lstlisting}
+    package Terminals is     -- common noun
+    package Text_Routines is -- common noun
+\end{lstlisting}
+
+被保护对象样本:
+\begin{lstlisting}
+    protected Current_Location is -- data being protected
+    protected type Guardian is    -- noun implying protection
+\end{lstlisting}
+
+任务名字样本:
+\begin{lstlisting}
+    task Terminal_Resource_Manager is -- common noun that shows action
+\end{lstlisting}
+
+下面这段代码样本，因为使用语言部分命名约定而呈现的清晰结果:
+\begin{lstlisting}
+    Get_Next_Token(Current_Token);
+    case Current_Token is
+       when Identifier =>          Process_Identifier;
+       when Numeric    =>          Process_Numeric;
+    end case; -- Current_Token
+    if Is_Empty(Current_List) then
+       Number_Of_Elements := 0;
+    else
+       Number_Of_Elements := Length(Current_List);
+    end if;
+\end{lstlisting}
+
+当包和她的子程序一起被指定，能得到非常有描述性的代码:
+\begin{lstlisting}
+    if Stack.Is_Empty(Current_List) then
+       Current_Token := Stack.Top(Current_List);
+    end if;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+当使用这些命名约定，代码会易于理解，读起来也象自然语言。当动词
+用于行动，如子程序，名词用于对象，例如子程序处理的数据，写出的
+代码更容易阅读和理解。这里模仿了读者熟悉的交流媒体。一段程序模拟
+了现实中的情况，使用这样的约定，减少了阅读和理解程序种的翻译次数。
+某种意义上，你选择的名字反应了从电脑硬件到应用要求的抽象级别。
+
+有关标签类型相关的包中，特殊意义的后缀使用，
+参见准则\ref{c:readability:tag} 。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+当前，对于任务的进入的命名，有些相互矛盾的命名约定。有些程序员和
+设计员提倡任务的进入使用和子程序一样的命名约定，模糊了程序中包含了
+任务的事实。他们的理由是如果任务用包重新实现或反之，名字不需要被
+替换。其他人则喜欢尽可能的突出任务存在的事实，以保证能分辨出任务的
+存在和它所带来的假设额外开销。
+\end{blockindent}
+
+\subsection{常量和命名的数字}
+\glentry{准则}
+\begin{itemize}
+    \item 尽量用符号的名字而不是文字。
+    \item 对于数学常量 \texttt{Pi} 和 \texttt{e},
+用预定义的常量 \texttt{Ada.Numerics.Pi} 和 \texttt{Ada.Numerics.e}。
+    \item 用常量而不是变量来表示常数。
+    \item 当一个值是某个类型所特有的或这个值必须静止，用常量。
+    \item 尽量用命名的数字，而不是常量。
+    \item 用命名的数字来代替文字的数字，它的类型或属性是真正的通用的。
+    \item 对于对象的值在确立之后不能改变的，用常量(\cite{united87})。
+    \item 用静止表达式来表示符号间的关系。
+    \item 用线性的独立的文字组。
+    \item 尽量用属性 \texttt{'First} 或者 \texttt{'Last} 而不是文字。
+\end{itemize}
 \section{注释}
+\glentry{准则}
 
 \section{使用类型}
 
@@ -390,9 +716,34 @@ end Disk_Driver;
     \item 对定义可见的访问类型、子界、数组，考虑在子类型标志符中用后缀。
     \item 对私有类型，不要使用针对子类型标志符的构造规则 (例如加后缀)。
     \item 不要使用预定义包中的子类型名字。
-    \item 对于逻辑对象 使用断定语或从属的名字。
+    \item 对于逻辑对象 使用判断语或从属的名字。
     \item 使用单数、泛指的名词作为对象标志符。
     \item 选用能说明对象执行时的值的标识符。
     \item 使用单数、泛指的名词作记录的组件。
+    \item 使用一致的命名规则来对标签类型和相对应包命名。
+
+    \item 用行动的动词来命名过程和入口。
+    \item 用判断式的子句命名逻辑函数。
+    \item 用名词命名非逻辑函数。
+    \item 给包的名字要暗含比子程序高级的组构。通常来说，这都是描述供应的抽象的
+名词。
+    \item 给任务命名隐含活动的实体。
+    \item 用描述被保护数据的名词来命名保护单元。
+    \item 把通用子程序当做非通用子程序来命名。
+    \item 把通用包当做非通用包来命名。
+    \item 通用名字应给比例示的名字更广泛。
+
+    \item 尽量用符号的名字而不是文字。
+    \item 对于数学常量 \texttt{Pi} 和 \texttt{e},
+用预定义的常量 \texttt{Ada.Numerics.Pi} 和 \texttt{Ada.Numerics.e}。
+    \item 用常量而不是变量来表示常数。
+    \item 当一个值是某个类型所特有的或这个值必须静止，用常量。
+    \item 尽量用命名的数字，而不是常量。
+    \item 用命名的数字来代替文字的数字，它的类型或属性是真正的通用的。
+    \item 对于对象的值在确立之后不能改变的，用常量(\cite{united87})。
+    \item 用静止表达式来表示符号间的关系。
+    \item 用线性的独立的文字组。
+    \item 尽量用属性 \texttt{'First} 或者 \texttt{'Last} 而不是文字。
+
 \end{itemize}
 
