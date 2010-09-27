@@ -661,7 +661,8 @@ end Disk_Driver;
 设计员提倡任务的进入使用和子程序一样的命名约定，模糊了程序中包含了
 任务的事实。他们的理由是如果任务用包重新实现或反之，名字不需要被
 替换。其他人则喜欢尽可能的突出任务存在的事实，以保证能分辨出任务的
-存在和它所带来的假设额外开销。
+存在和它所带来的假设额外开销。 可以根据项目侧重点的不同来选择使用
+适当的命名约定。
 \end{blockindent}
 
 \subsection{常量和命名的数字}
@@ -679,7 +680,142 @@ end Disk_Driver;
     \item 用线性的独立的文字组。
     \item 尽量用属性 \texttt{'First} 或者 \texttt{'Last} 而不是文字。
 \end{itemize}
+
+
+\glentry{范例}
+\begin{lstlisting}
+    3.14159_26535_89793                               -- literal
+    Max_Entries : constant Integer      := 400;       -- constant
+    Avogadros_Number : constant := 6.022137 * 10**23; -- named number
+    Avogadros_Number / 2                              -- static expression
+    Avogadros_Number                                  -- symbolic value
+\end{lstlisting}
+
+声明 \texttt{Pi} 作为一个被命名的数字 (假设有对\cite{arm95}[\textsection{}A.5]
+中的预定义包 \texttt{Ada.Numerics}使用\texttt{with} 语句), 它可以被下面的
+赋值语句用符号引用:
+\begin{lstlisting}
+    Area := Pi * Radius**2; -- if radius is known.
+\end{lstlisting}
+而不用这样:
+\begin{lstlisting}
+    Area := 3.14159 * Radius**2; -- Needs explanatory comment.
+\end{lstlisting}
+
+另外，\texttt{ Ada.Characters.Latin\_1.Bel} 比 \texttt{Character'Val(8\#007\#)}
+更具表达性。
+
+常量和被命名数字的清晰度，可以因使用其他的常量和被命名数字而提高。例如:
+\begin{lstlisting}
+    Bytes_Per_Page   : constant := 512;
+    Pages_Per_Buffer : constant := 10;
+    Buffer_Size      : constant := Pages_Per_Buffer * Bytes_Per_Page;
+\end{lstlisting}
+比以下的代码更能自我说明和维护:
+\begin{lstlisting}
+    Buffer_Size : constant := 5_120; -- ten pages
+\end{lstlisting}
+
+下面的文字应该用常量:
+\begin{lstlisting}
+    if New_Character = '$' then -- "constant" that may change
+    ...
+    if Current_Column = 7 then  -- "constant" that may change
+\end{lstlisting}
+
+
+\glentry{原理}
+\begin{blockindent}
+用标识符而不是文字，使表达式的目的明确，也减少了注释的需要。含有数字文字
+表达式的常量更安全，因为他们不需要人工去计算。他们也比单独的数字文字有
+启发作用，因为有更多的机会植入解释性的名字。常量声明的清晰度可以因为在
+静态表达式中使用其他相关的常量来定义新的常量而提高。这并不会降低效率，
+因为被命名数字的静态表达式在编译时就被计算出来了。
+
+一个常量是有类型的。一个被命名数字只能是通用类型: \texttt{universal\_integer}
+或 \texttt{universal\_real}。强类型只对常量起作用，对被命名数字或文字
+不起作用。被命名数字允许编译器产生比常量更有效的代码，编译时做更完全
+的错误检查。如果文字包含了许多个数字 (如上面例子中的 \texttt{Pi})，使用
+标志符减少了击键错误。如果有击键错误，他们也更容易在检阅或编译时被指出。
+
+文字的独立意味着少数几个文字的使用不会互相依赖，而任何常量和被命名值之间的
+关系由静态表达式表现。线性独立的文字值，给出这样一个机会，如果这个文字值变了，
+所有依赖于这个文字的被命名数字的值都会自动被改变。
+
+参见准则\ref{c:function-struct:func}中更多有关选择无参数函数和常量的准则。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+有某些灰色地带，数字本身比名字更能自我说明。这是某些特殊的应用，通常在数字
+是大家都熟悉的，值不会变的情况下发生:
+\begin{lstlisting}
+    Fahrenheit := 32.0 + (9.0 * Celsius) / 5.0;
+\end{lstlisting}
+\end{blockindent}
+
+\subsection{异常}
+\glentry{准则}
+\begin{itemize}
+    \item 用异常所代表的问题种类命名。
+\end{itemize}
+
+\glentry{范例}
+\begin{lstlisting}
+    Invalid_Name: exception;
+    Stack_Overflow: exception;
+\end{lstlisting}
+
+\glentry{原理}
+\begin{blockindent}
+用检测到的问题作异常的名字，提高了代码的可读性。你应该尽量精确的命名你的
+异常，这样代码的维护者会理解为什么异常会发生。一个正确命名的异常，应该对
+使用客户有意义。
+\end{blockindent}
+
+\subsection{构造器}
+\glentry{准则}
+\begin{itemize}
+    \item 使用前缀 \texttt{New}, \texttt{Make} 或 \texttt{Create}
+命名构造器 (这里指创造或初始化对象的操作)。
+    \item 对于含有构造器的子包，用可以标示内容的名字。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{itemize}
+    \item[-] 命名一个含有构造器的子包 \texttt{<whatever>.Constructor}。
+\end{itemize}
+
+\glentry{范例}
+\begin{lstlisting}
+    function Make_Square (Center : Cartesian_Coordinates;
+			  Side   : Positive)
+      return Square;
+\end{lstlisting}
+
+\glentry{原理}
+\begin{blockindent}
+在构造器名字中使用前缀 \texttt{New}, \texttt{Make} 或 \texttt{Create}，
+令它的目的清晰。你也许希望限制前缀 \texttt{New} 只用于返回存取值的构造器，
+因为这个前缀暗示内部使用了分配符。
+
+将所有的构造器都放在一个子包中是很有用的组织原则，即使他们返回存取值。
+
+有关 Ada 的构造器的信息，参见准则\ref{c:oof:constructor}。
+\end{blockindent}
+
 \section{注释}
+源代码中的注释是个有争论的议题。对于注释是否会提高阅读性，反对和赞成的都有
+依据。实践中，注释最大的问题是，当代码改变时，人们经常忘记改变对应的注释，
+这导致注释会误导读者。注释应该保留给代码无法表达的内容，以及突出某些准则
+被违背的原因。如果可能，代码中的对象和单元应该使用可以自我说明的名字，简单、
+容易理解的程序结构也应该被使用，这样就需要非常少的注释。为了选择 (和键入)
+合适的名字所做的额外努力，以及对设计干净和可理解的程序结构的额外思考是
+完全应该的。
+
+使用注释类陈述代码的意图。
+
+\subsection{一般注释}
 \glentry{准则}
 
 \section{使用类型}
@@ -744,6 +880,11 @@ end Disk_Driver;
     \item 用静止表达式来表示符号间的关系。
     \item 用线性的独立的文字组。
     \item 尽量用属性 \texttt{'First} 或者 \texttt{'Last} 而不是文字。
-
+    \item 用异常所代表的问题种类命名。
+    \item 使用前缀 \texttt{New}, \texttt{Make} 或 \texttt{Create}
+命名构造器 (这里指创造或初始化对象的操作)。
+    \item 对于含有构造器的子包，用可以标示内容的名字。
 \end{itemize}
 
+\glentry{注释}
+\noindent
