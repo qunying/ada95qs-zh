@@ -577,7 +577,7 @@ end Disk_Driver;
     \item 用描述被保护数据的名词来命名保护单元。
     \item 把通用子程序当做非通用子程序来命名。
     \item 把通用包当做非通用包来命名。
-    \item 通用名字应给比例示的名字更广泛。
+    \item 通用名字应该比例示的名字更广泛。
 \end{itemize}
 
 \glentry{范例}
@@ -813,10 +813,233 @@ end Disk_Driver;
 合适的名字所做的额外努力，以及对设计干净和可理解的程序结构的额外思考是
 完全应该的。
 
-使用注释类陈述代码的意图。
+使用注释来陈述代码的意图。概述代码的注释有助于维护的程序员看到整体意图。代码
+本身是如何实现的详细内容，不应该在注释中改述。
+
+注释应该减至最少。他们应该提供 Ada 程序中无法表述的必须内容，侧重于代码结构，
+以及引起注意到故意和必须违反准则的地方。注释的出现应该让人注意到例示的真正
+问题或者补充示例程序中的不足。
+
+维护的程序员要知道不相邻代码间的因果交互关系，以便对程序有一个差不多
+的全局观。他们一般都是通过人工模拟部分代码来得到这些信息。注释应该足够支持
+这个过程 (\cite{soloway86})。
+
+本节呈现了有关怎样写好的注释的通用准则。之后又定义了几个不同类型的注释，
+每种类型都有对应的使用准则。这些类型有文件头、程序单元规范头、程序单元主体头、
+数据注释、语句注释和标记注释。
 
 \subsection{一般注释}
 \glentry{准则}
+\begin{itemize}
+    \item 尽可能写清晰的代码来减少注释的需求。
+    \item 绝不要在注释里重复可以从代码中轻易获得的信息。
+    \item 在需要注释的地方，要写得简明和完整。
+    \item 注释中要用正确的语法和拼写。
+    \item 注释要在视觉上和代码区分出来。
+    \item 把注释放在数据头上，这样相关的信息可以被自动工具提取出来。
+\end{itemize}
+
+\glentry{原理}
+\begin{blockindent}
+结构和函数写得好的代码，没有注释也很清楚。对于晦涩的或结构糟糕的代码，无论
+有没有注释都很难令人理解、维护或重用。\emph{坏代码应该被改进而不是解释}。
+阅读代码本身是唯一可以绝对确定代码做了些什么的方法，所以代码应该尽可能写
+得可读。
+
+在注释中重复代码中的信息是个很不好的主意。有几个原因，首先，这不必要，
+而且降低效率。第二，代码在不断的改动，很难正确地维护重复的信息。当代码
+被改动时，它需要通过编译和测试来确定其正确性。但是，没有一种自动的机制
+可以保证注释能正确反映代码的改变。经常，注释中重复的信息在首次代码改动后
+就变得过时，但一直存在于软件的生命周期中。第三，当有关整个系统的注释
+用一个子系统的作者的有限眼光来写，这个注释通常从一开始就不正确。
+
+注释在揭示从代码中很难或不可能得到的信息时很有必要。本书后续的章节中
+会有这样的注释。完全而简明的呈现所要求的信息。
+
+注释的目的是帮助读者理解代码。拼写错误、不合语法、岐义或不完整的注释违背
+了这个目的。如果一个注释值得加入，那就值得正确的加入来增大它的有用性。
+
+用缩进、和头组合在一起或者用虚线来突出注释，使得注释从视觉上和代码区分出来，
+这很有用，因为它使代码变得容易阅读。本书的后续章节会详细说明这点。
+\end{blockindent}
+
+\glentry{自动化注解}
+\begin{blockindent}
+有关在注释中存放多余信息的准则是只在人工注释中应用。有些工具可以自动维护
+代码的相关信息 (例如，调用的单元、被调用的单元、交叉引用信息和修订历史等等)，
+这些信息存放在和代码同一文件的注释中。其他工具可以读取注释，但不更新它们，
+从注释中的信息可以自动生成详细的设计文档或其他报告。
+
+这些工具的使用，鼓励或要求你构造头注释，这样它们才可以被自动提取或更新。
+注意，自动改变文件中的注释的工具，只有足够的经常运行才有用。自动生成的
+过时信息比人工的过时信息更危险，因为读者更相信它们。
+
+配置管理工具对修订历史的维护更加准确和完整。在没有工具的支持下，工程师
+修改了代码而忘了更新修订历史是很常见的事。如果你的配置管理工具可以在源
+文件中以注释形式维护修订历史，不管在格式或位置上如何折衷，都要利用这个
+功能。在文件尾部附加一个完整的修订历史，要比在文件头有一个格式很好但不
+完整的历史要好。
+\end{blockindent}
+
+\subsection{文件头}
+\glentry{准则}
+\begin{itemize}
+    \item 在每一个源文件中放一个文件头。
+    \item 在文件头中，放入所有者、责任和历史信息。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{itemize}
+    \item[-] 在文件头中放版权通告。
+    \item[-] 在文件头中放作者名字和部门。
+    \item[-] 在文件头中放修订历史，包括每个改动的概要，日期和修改的人。 
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\begin{lstlisting}
+------------------------------------------------------------------------
+--      Copyright (c) 1991, Software Productivity Consortium, Inc.
+--      All rights reserved.
+-- Author: J. Smith
+-- Department:System Software Department
+-- Revision History:
+--   7/9/91 J. Smith
+--     - Added function Size_Of to support queries of node sizes.
+--     - Fixed bug in Set_Size which caused overlap of large nodes.
+--   7/1/91 M. Jones
+--     - Optimized clipping algorithm for speed.
+--   6/25/91 J. Smith
+--     - Original version.
+------------------------------------------------------------------------
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+如果你想要确定保护你对软件的权利，每一个源文件都应该有所有者信息。另外，
+为了有更高的可见性，它应该是文件中的第一项。
+
+责任和修订信息也应该在每个文件中，这方便未来的维护者。这些头信息是维护者
+最相信的信息，因为它们累积。它们不会演变。没有修改文件作者名字或修订历史
+的需要，修订历史应该反映每次改动而更新。最糟的，也就是它不完整，它很少会
+出错。而且，一个单元的历史上修改的次数和频率，修改的人的个数都是很好的
+关于设计的实现完整性的指示器。
+
+除了作者名字，有关如何找到最初作者的信息也应该包含在文件头里，如果有问题
+产生，这有助于维护者找到原作者。但是，详细的信息，象电话号码、邮政地址、
+办公室号码、电脑帐号用户名则太易变动而不太有用。最好记录下作者写代码时
+工作的部门。这个信息在作者欢办公室、部门甚至离开公司后还是有用的，因为
+这个部门很有可能还对原来版本负责。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+现代的配置管理系统，直接从文件头注释中截取版本历史是多余的。管理系统维护
+着一个从内容上看更可靠和一致的修改历史。某些系统可以重现一个单元的早期版本。
+\end{blockindent}
+
+\subsection{程序单元规范头}
+
+\glentry{准则}
+\begin{itemize}
+    \item 在每一个程序单元规范都放一个头。
+    \item 在程序单元规范头中放上用户使用要求信息。
+    \item 除了单元名字，不要在头中重复规范中的信息。
+    \item 解释单元做些什么，而不是怎样和为什么这么做。
+    \item 描述这个程序单元的完整接口，包括它能升起的任何异常和任何可以造成
+全局影响的地方。
+    \item 不要包括这个单元如何适用于包含的软件系统的信息。
+    \item 描述单元的性能特性 (时间、空间)。
+\end{itemize}
+
+\glentry{具体事例}
+\begin{itemize}
+    \item[-] 在头中放入程序名。
+    \item[-] 简单说明程序单元的目的。
+    \item[-] 对于包，描述可见子程序相互之间的影响和应当怎样一起使用它们。
+    \item[-] 列出单元升起的所有异常。
+    \item[-] 列出单元所有的全局影响。
+    \item[-] 列出单元的前置条件和后置条件。
+    \item[-] 列出单元的激活的隐藏任务。
+    \item[-] 不要列出子程序的参数名字。
+    \item[-] 不要只为列出而列出子程序的名字。
+    \item[-] 不要列出单元中使用的其它单元的名字。
+    \item[-] 不要列出使用本单元的其它单元的名字。
+\end{itemize}
+
+\glentry{范例}
+\begin{lstlisting}
+    ------------------------------------------------------------------------
+    -- AUTOLAYOUT
+    -- Purpose:
+    --    This package computes positional information for nodes and arcs
+    --    of a directed graph. It encapsulates a layout algorithm which is
+    --    designed to minimize the number of crossing arcs and to emphasize
+    --    the primary direction of arc flow through the graph.
+    -- Effects:
+    --    - The expected usage is:
+    --      1. Call Define for each node and arc to define the graph.
+    --      2. Call Layout to assign positions to all nodes and arcs.
+    --      3. Call Position_Of for each node and arc to determine the
+    --         assigned coordinate positions.
+    --    - Layout can be called multiple times, and recomputes the
+    --      positions of all currently defined nodes and arcs each time.
+    --    - Once a node or arc has been defined, it remains defined until
+    --      Clear is called to delete all nodes and arcs.
+    -- Performance:
+    --    This package has been optimized for time, in preference to space.
+    --    Layout times are on the order of N*log(N) where N is the number
+    --    of nodes, but memory space is used inefficiently.
+    ------------------------------------------------------------------------
+    package Autolayout is
+       ...
+       ---------------------------------------------------------------------
+       -- Define
+       -- Purpose:
+       --    This procedure defines one node of the current graph.
+       -- Exceptions:
+       --    Node_Already_Defined
+       ---------------------------------------------------------------------
+       procedure Define
+	      (New_Node : in      Node);
+       ---------------------------------------------------------------------
+       -- Layout
+       -- Purpose:
+       --    This procedure assigns coordinate positions to all defined
+       --    nodes and arcs.
+       -- Exceptions:
+       --    None.
+       ---------------------------------------------------------------------
+       procedure Layout;
+       ---------------------------------------------------------------------
+       -- Position_Of
+       -- Purpose:
+       --    This function returns the coordinate position of the
+       --    specified node. The default position (0,0) is returned if no
+       --    position has been assigned yet.
+       -- Exceptions:
+       --    Node_Not_Defined
+       ---------------------------------------------------------------------
+       function Position_Of (Current : in Node)
+	     return Position;
+       ...
+    end Autolayout;
+\end{lstlisting}
+
+\glentry{原理}
+\begin{blockindent}
+程序单元规范注释头的目的是帮助用户理解怎样使用本单元。从阅读规范和注释头中，
+用户应给知道有关如何使用单元的所有必须的信息。它不应该还需要阅读单元体。所以，
+每一个单元规范都应该有一个注释头，每个头应该包含所有没有在规范中表达的使用
+信息。这些信息应包括单元之间的相互影响，对共享资源的影响，异常的升起，以及
+时间、空间的特性。这些信息都不可能从 Ada 的程序单元规范中得到。
+
+当你在注释头中重复可以从规范中读得的信息，这些信息在维护过程中会趋于不准确。
+例如，当定义一个过程时，列出所有的参数名字、模式或子类型并无意义，这些信息
+在规范中都有。同样的，不要在注释头中列出包中所有的子程序，除非这是有关子程序
+的重要声明中必须的。
+\end{blockindent}
 
 \section{使用类型}
 
@@ -867,7 +1090,7 @@ end Disk_Driver;
     \item 用描述被保护数据的名词来命名保护单元。
     \item 把通用子程序当做非通用子程序来命名。
     \item 把通用包当做非通用包来命名。
-    \item 通用名字应给比例示的名字更广泛。
+    \item 通用名字应该比例示的名字更广泛。
 
     \item 尽量用符号的名字而不是文字。
     \item 对于数学常量 \texttt{Pi} 和 \texttt{e},
@@ -888,3 +1111,24 @@ end Disk_Driver;
 
 \glentry{注释}
 \noindent
+\begin{itemize}
+    \item 尽可能写清晰的代码来减少注释的需求。
+    \item 绝不要在注释里重复可以从代码中轻易获得的信息。
+    \item 在需要注释的地方，要写得简明和完整。
+    \item 注释中要用正确的语法和拼写。
+    \item 注释要在视觉上和代码区分出来。
+    \item 把注释放在数据头上，这样相关的信息可以被自动工具提取出来。
+
+    \item 在每一个源文件中放一个文件头。
+    \item 在文件头中，放入所有者、责任和历史信息。
+
+    \item 在每一个程序单元规范都放一个头。
+    \item 在程序单元规范头中放上用户使用要求信息。
+    \item 除了单元名字，不要在头中重复规范中的信息。
+    \item 解释单元做些什么，而不是怎样和为什么这么做。
+    \item 描述这个程序单元的完整接口，包括它能升起的任何异常和任何可以造成
+全局影响的地方。
+    \item 不要包括这个单元如何适用于包含的软件系统的信息。
+    \item 描述单元的性能特性 (时间、空间)。
+
+\end{itemize}
