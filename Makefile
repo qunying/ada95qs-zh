@@ -17,6 +17,7 @@ LATEX=xelatex
 BIBTEX=bibtex
 DEP_FILES=caption-zh.tex copyright-notice.tex translator-preface.tex \
 preface.tex introduction.tex src-presentation.tex readability.tex \
+object-oriented-feature.tex \
 bib.tex
 
 PDFVIWER=epdfview

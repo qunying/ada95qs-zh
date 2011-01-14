@@ -416,7 +416,7 @@ end Disk_Driver;
 \begin{itemize}
     \item[-] 对标签类型和子类型的命名一致
 (参见准则\ref{c:readability:subtype})。
-    \item[-] 对于导出会有多个实现的抽象 (参见准则\ref{c:oof:abstract}) 的包，
+    \item[-] 对于导出会有多个实现的抽象 (参见准则\ref{c:oof:tagged:abstract}) 的包，
 使用前缀 \texttt{Abstract\_}。
     \item[-] 对于提供可以和主要抽象``mixed in (混合)''的功能单元的包，
 用后缀 \texttt{\_Mixin}。
@@ -546,7 +546,7 @@ end Disk_Driver;
 \begin{blockindent}
 你应采用一个一致、可读、传达抽象意图的命名方案。理想状况下，命名方案应统一
 处理从不同方法用标签类型生成类别。如果命名约定太死板，从可读性的角度看，
-那你写的代码片段会不自然。对于推导或通用混合的(\ref{c:oof:mul-inh}
+那你写的代码片段会不自然。对于推导或通用混合的(\ref{c:oof:mul-inh:tech}
 类型夸展使用相近的命名约定，对象和过程的声明变得可读。
 \end{blockindent}
 
@@ -801,7 +801,7 @@ end Disk_Driver;
 
 将所有的构造器都放在一个子包中是很有用的组织原则，即使他们返回存取值。
 
-有关 Ada 的构造器的信息，参见准则\ref{c:oof:constructor}。
+有关 Ada 的构造器的信息，参见准则\ref{c:oof:tagged:constructor}。
 \end{blockindent}
 
 \section{注释}
@@ -970,61 +970,61 @@ end Disk_Driver;
 
 \glentry{范例}
 \begin{lstlisting}
-    ------------------------------------------------------------------------
-    -- AUTOLAYOUT
-    -- Purpose:
-    --    This package computes positional information for nodes and arcs
-    --    of a directed graph. It encapsulates a layout algorithm which is
-    --    designed to minimize the number of crossing arcs and to emphasize
-    --    the primary direction of arc flow through the graph.
-    -- Effects:
-    --    - The expected usage is:
-    --      1. Call Define for each node and arc to define the graph.
-    --      2. Call Layout to assign positions to all nodes and arcs.
-    --      3. Call Position_Of for each node and arc to determine the
-    --         assigned coordinate positions.
-    --    - Layout can be called multiple times, and recomputes the
-    --      positions of all currently defined nodes and arcs each time.
-    --    - Once a node or arc has been defined, it remains defined until
-    --      Clear is called to delete all nodes and arcs.
-    -- Performance:
-    --    This package has been optimized for time, in preference to space.
-    --    Layout times are on the order of N*log(N) where N is the number
-    --    of nodes, but memory space is used inefficiently.
-    ------------------------------------------------------------------------
-    package Autolayout is
-       ...
-       ---------------------------------------------------------------------
-       -- Define
-       -- Purpose:
-       --    This procedure defines one node of the current graph.
-       -- Exceptions:
-       --    Node_Already_Defined
-       ---------------------------------------------------------------------
-       procedure Define
-	      (New_Node : in      Node);
-       ---------------------------------------------------------------------
-       -- Layout
-       -- Purpose:
-       --    This procedure assigns coordinate positions to all defined
-       --    nodes and arcs.
-       -- Exceptions:
-       --    None.
-       ---------------------------------------------------------------------
-       procedure Layout;
-       ---------------------------------------------------------------------
-       -- Position_Of
-       -- Purpose:
-       --    This function returns the coordinate position of the
-       --    specified node. The default position (0,0) is returned if no
-       --    position has been assigned yet.
-       -- Exceptions:
-       --    Node_Not_Defined
-       ---------------------------------------------------------------------
-       function Position_Of (Current : in Node)
-	     return Position;
-       ...
-    end Autolayout;
+------------------------------------------------------------------------
+-- AUTOLAYOUT
+-- Purpose:
+--    This package computes positional information for nodes and arcs
+--    of a directed graph. It encapsulates a layout algorithm which is
+--    designed to minimize the number of crossing arcs and to emphasize
+--    the primary direction of arc flow through the graph.
+-- Effects:
+--    - The expected usage is:
+--      1. Call Define for each node and arc to define the graph.
+--      2. Call Layout to assign positions to all nodes and arcs.
+--      3. Call Position_Of for each node and arc to determine the
+--         assigned coordinate positions.
+--    - Layout can be called multiple times, and recomputes the
+--      positions of all currently defined nodes and arcs each time.
+--    - Once a node or arc has been defined, it remains defined until
+--      Clear is called to delete all nodes and arcs.
+-- Performance:
+--    This package has been optimized for time, in preference to space.
+--    Layout times are on the order of N*log(N) where N is the number
+--    of nodes, but memory space is used inefficiently.
+------------------------------------------------------------------------
+package Autolayout is
+   ...
+   ---------------------------------------------------------------------
+   -- Define
+   -- Purpose:
+   --    This procedure defines one node of the current graph.
+   -- Exceptions:
+   --    Node_Already_Defined
+   ---------------------------------------------------------------------
+   procedure Define
+	  (New_Node : in      Node);
+   ---------------------------------------------------------------------
+   -- Layout
+   -- Purpose:
+   --    This procedure assigns coordinate positions to all defined
+   --    nodes and arcs.
+   -- Exceptions:
+   --    None.
+   ---------------------------------------------------------------------
+   procedure Layout;
+   ---------------------------------------------------------------------
+   -- Position_Of
+   -- Purpose:
+   --    This function returns the coordinate position of the
+   --    specified node. The default position (0,0) is returned if no
+   --    position has been assigned yet.
+   -- Exceptions:
+   --    Node_Not_Defined
+   ---------------------------------------------------------------------
+   function Position_Of (Current : in Node)
+	 return Position;
+   ...
+end Autolayout;
 \end{lstlisting}
 
 \glentry{原理}
@@ -1091,61 +1091,61 @@ Xyz 调用做 ... ...'' 要好。程序单元应该编写为不必知道和搭�
 
 \glentry{范例}
 \begin{lstlisting}
-    ------------------------------------------------------------------------
-    -- Autolayout
-    -- Implementation Notes:
-    --   - This package uses a heuristic algorithm to minimize the number
-    --     of arc crossings.  It does not always achieve the true minimum
-    --     number which could theoretically be reached.  However it does a
-    --     nearly perfect job in relatively little time.  For details about
-    --     the algorithm, see ...
-    -- Portability Issues:
-    --   - The native math package Math_Lib is used for computations of
-    --     coordinate positions.
-    --   - 32-bit integers are required.
-    --   - No operating system specific routines are called.
-    -- Anticipated Changes:
-    --   - Coordinate_Type below could be changed from integer to float
-    --     with little effort.  Care has been taken to not depend on the
-    --     specific characteristics of integer arithmetic.
-    ------------------------------------------------------------------------
-    package body Autolayout is
-       ...
-       ---------------------------------------------------------------------
-       -- Define
-       -- Implementation Notes:
-       --   - This routine stores a node in the general purpose Graph data
-       --     structure, not the Fast_Graph structure because ...
-       ---------------------------------------------------------------------
-       procedure Define
-	     (New_Node : in     Node) is
-       begin
-	  ...
-       end Define;
-       ---------------------------------------------------------------------
-       -- Layout
-       -- Implementation Notes:
-       --   - This routine copies the Graph data structure (optimized for
-       --     fast random access) into the Fast_Graph data structure
-       --     (optimized for fast sequential iteration), then performs the
-       --     layout, and copies the data back to the Graph structure.  This
-       --     technique was introduced as an optimization when the algorithm
-       --     was found to be too slow, and it produced an order of
-       --     magnitude improvement.
-       ---------------------------------------------------------------------
-       procedure Layout is
-       begin
-	  ...
-       end Layout;
-       ---------------------------------------------------------------------
-       -- Position_Of
-       ---------------------------------------------------------------------
-       function Position_Of (Current : in     Node)
-	     return Position is
-       begin
-	  ...
-       end Position_Of;
-       ...
+------------------------------------------------------------------------
+-- Autolayout
+-- Implementation Notes:
+--   - This package uses a heuristic algorithm to minimize the number
+--     of arc crossings.  It does not always achieve the true minimum
+--     number which could theoretically be reached.  However it does a
+--     nearly perfect job in relatively little time.  For details about
+--     the algorithm, see ...
+-- Portability Issues:
+--   - The native math package Math_Lib is used for computations of
+--     coordinate positions.
+--   - 32-bit integers are required.
+--   - No operating system specific routines are called.
+-- Anticipated Changes:
+--   - Coordinate_Type below could be changed from integer to float
+--     with little effort.  Care has been taken to not depend on the
+--     specific characteristics of integer arithmetic.
+------------------------------------------------------------------------
+package body Autolayout is
+   ...
+   ---------------------------------------------------------------------
+   -- Define
+   -- Implementation Notes:
+   --   - This routine stores a node in the general purpose Graph data
+   --     structure, not the Fast_Graph structure because ...
+   ---------------------------------------------------------------------
+   procedure Define
+	 (New_Node : in     Node) is
+   begin
+      ...
+   end Define;
+   ---------------------------------------------------------------------
+   -- Layout
+   -- Implementation Notes:
+   --   - This routine copies the Graph data structure (optimized for
+   --     fast random access) into the Fast_Graph data structure
+   --     (optimized for fast sequential iteration), then performs the
+   --     layout, and copies the data back to the Graph structure.  This
+   --     technique was introduced as an optimization when the algorithm
+   --     was found to be too slow, and it produced an order of
+   --     magnitude improvement.
+   ---------------------------------------------------------------------
+   procedure Layout is
+   begin
+      ...
+   end Layout;
+   ---------------------------------------------------------------------
+   -- Position_Of
+   ---------------------------------------------------------------------
+   function Position_Of (Current : in     Node)
+	 return Position is
+   begin
+      ...
+   end Position_Of;
+   ...
 end Autolayout;
 \end{lstlisting}
 
@@ -1171,11 +1171,11 @@ end Autolayout;
 完全乎略掉解释头，就像上面的 Position\_Of。记住要确定你乎略的信息
 真的不包含信息。例如，看看下面两个头的不同:
 \begin{lstlisting}
-  -- Implementation Notes: None.
+-- Implementation Notes: None.
 \end{lstlisting}
 和:
 \begin{lstlisting}
-  -- NonPortable Features: None.
+-- NonPortable Features: None.
 \end{lstlisting}
 第一条信息是作者对维护者说:``我想不到任何其他东西告诉你。'' 而第二条信息
 意思是``我保证本单元完全可移植性。''
@@ -1196,78 +1196,78 @@ end Autolayout;
 \begin{blockindent}
 可以用目的来对对象分组，那注释为：
 \begin{lstlisting}
-    ...
-    ---------------------------------------------------------------------
-    -- Current position of the cursor in the currently selected text
-    -- buffer, and the most recent position explicitly marked by the
-    -- user.
-    -- Note:  It is necessary to maintain both current and desired
-    --        column positions because the cursor cannot always be
-    --        displayed in the desired position when moving between
-    --        lines of different lengths.
-    ---------------------------------------------------------------------
-    Desired_Column : Column_Counter;
-    Current_Column : Column_Counter;
-    Current_Row    : Row_Counter;
-    Marked_Column  : Column_Counter;
-    Marked_Row     : Row_Counter;
+...
+---------------------------------------------------------------------
+-- Current position of the cursor in the currently selected text
+-- buffer, and the most recent position explicitly marked by the
+-- user.
+-- Note:  It is necessary to maintain both current and desired
+--        column positions because the cursor cannot always be
+--        displayed in the desired position when moving between
+--        lines of different lengths.
+---------------------------------------------------------------------
+Desired_Column : Column_Counter;
+Current_Column : Column_Counter;
+Current_Row    : Row_Counter;
+Marked_Column  : Column_Counter;
+Marked_Row     : Row_Counter;
 \end{lstlisting}
 应该注释异常被抛出的条件:
 \begin{lstlisting}
-    ---------------------------------------------------------------------
-    -- Exceptions
-    ---------------------------------------------------------------------
-    Node_Already_Defined : exception;   -- Raised when an attempt is made
-					--|   to define a node with an
-					--|   identifier which already
-					--|   defines a node.
-    Node_Not_Defined     : exception;   -- Raised when a reference is
-					--|   made to a node which has
-					--|   not been defined.
+---------------------------------------------------------------------
+-- Exceptions
+---------------------------------------------------------------------
+Node_Already_Defined : exception;   -- Raised when an attempt is made
+				    --|   to define a node with an
+				    --|   identifier which already
+				    --|   defines a node.
+Node_Not_Defined     : exception;   -- Raised when a reference is
+				    --|   made to a node which has
+				    --|   not been defined.
 \end{lstlisting}
 下面是个更加复杂的例子，包括了多个记录，访问类型来组成一个复杂的数据结构:
 \begin{lstlisting}
-    ---------------------------------------------------------------------
-    -- These data structures are used to store the graph during the
-    -- layout process. The overall organization is a sorted list of
-    -- "ranks," each containing a sorted list of nodes, each containing
-    -- a list of incoming arcs and a list of outgoing arcs.
-    -- The lists are doubly linked to support forward and backward
-    -- passes for sorting. Arc lists do not need to be doubly linked
-    -- because order of arcs is irrelevant.
-    -- The nodes and arcs are doubly linked to each other to support
-    -- efficient lookup of all arcs to/from a node, as well as efficient
-    -- lookup of the source/target node of an arc.
-    ---------------------------------------------------------------------
-    type Arc;
-    type Arc_Pointer is access Arc;
-    type Node;
-    type Node_Pointer is access Node;
-    type Node is
-       record
-	  Id       : Node_Pointer;-- Unique node ID supplied by the user.
-	  Arc_In   : Arc_Pointer;
-	  Arc_Out  : Arc_Pointer;
-	  Next     : Node_Pointer;
-	  Previous : Node_Pointer;
-       end record;
-    type Arc is
-       record
-	  ID     : Arc_ID;        -- Unique arc ID supplied by the user.
-	  Source : Node_Pointer;
-	  Target : Node_Pointer;
-	  Next   : Arc_Pointer;
-       end record;
-    type Rank;
-    type Rank_Pointer is access Rank;
-    type Rank is
-       record
-	  Number     : Level_ID;  -- Computed ordinal number of the rank.
-	  First_Node : Node_Pointer;
-	  Last_Node  : Node_Pointer;
-	  Next       : Rank_Pointer;
-	  Previous   : Rank_Pointer;
-       end record;
+---------------------------------------------------------------------
+-- These data structures are used to store the graph during the
+-- layout process. The overall organization is a sorted list of
+-- "ranks," each containing a sorted list of nodes, each containing
+-- a list of incoming arcs and a list of outgoing arcs.
+-- The lists are doubly linked to support forward and backward
+-- passes for sorting. Arc lists do not need to be doubly linked
+-- because order of arcs is irrelevant.
+-- The nodes and arcs are doubly linked to each other to support
+-- efficient lookup of all arcs to/from a node, as well as efficient
+-- lookup of the source/target node of an arc.
+---------------------------------------------------------------------
+type Arc;
+type Arc_Pointer is access Arc;
+type Node;
+type Node_Pointer is access Node;
+type Node is
+   record
+      Id       : Node_Pointer;-- Unique node ID supplied by the user.
+      Arc_In   : Arc_Pointer;
+      Arc_Out  : Arc_Pointer;
+      Next     : Node_Pointer;
+      Previous : Node_Pointer;
+   end record;
+type Arc is
+   record
+      ID     : Arc_ID;        -- Unique arc ID supplied by the user.
+      Source : Node_Pointer;
+      Target : Node_Pointer;
+      Next   : Arc_Pointer;
+   end record;
+type Rank;
+type Rank_Pointer is access Rank;
+type Rank is
+   record
+      Number     : Level_ID;  -- Computed ordinal number of the rank.
+      First_Node : Node_Pointer;
+      Last_Node  : Node_Pointer;
+      Next       : Rank_Pointer;
+      Previous   : Rank_Pointer;
+   end record;
     First_Rank : Rank_Pointer;
 Last_Rank  : Rank_Pointer;
 \end{lstlisting}
@@ -1299,8 +1299,100 @@ Desired\_Column 之间的关系。注释还解释了要有这两个变量的原�
 
 当注释异常时，用一般用语来描述异常的意思比列出所有会抛出此异常的子程序更好;
 那样的列表很难维护。当一个新例程加入后，这个列表很有可能没有跟着更新。
+另外，这些信息在子程序的注释中已经有了，所有子程序能抛出的异常都应该在
+注释中列出。列出子程序的异常比列出抛出异常的子程序要有用和更容易维护。
 
+第三个例子中，记录的域名短而易记，但他们并不能完全自述。这通常
+在包含访问类型的复杂的数据结构中发生。无论给记录和域起什么名字，都没有办法
+完全解释整个记录和指针结构成为一个嵌套和排序的链表。例子中的注释就是这样，
+很有用。没有了注释，读者不会知道哪些链表已经排序，哪些是双向链表和为什么。
+注释解释了作者对这个复杂数据结构的意图。如果维护者想确认双向链表实现正确，
+还是必需要阅读代码。有着这样的准备，当维护者阅读代码是，就比较容易找到
+一个臭虫: 一个指针改变了，但另一个方向的没有。
+
+有关注释重分派操作的原理，参见\ref{c:oof:tagged:dispatch}。(重分派是指
+把一个基元操作的参数转化为一个类宽类型，然后分派到另一个基元操作。) 
+在准则\ref{c:oof:tagged:dispatch}的原理中，讨论了这样的文档应该放在规范
+文件还是体文件中。
 \end{blockindent}
+
+\subsection{语句注释}
+\glentry{准则}
+\begin{itemize}
+    \item 尽量减少语句中包含的注释。
+    \item 只注释代码不够清晰的部分。
+    \item 注释代码中有意省略的地方。
+    \item 不要用注释来改写代码。
+    \item 不要解释别的地方的代码，例如被本单元调用的子程序。
+    \item 当需要注释的时候，要让注释跟代码明显区分出来。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+下面是个注释的很糟糕的例子:
+\begin{lstlisting}
+...
+-- Loop through all the strings in the array Strings, converting
+-- them to integers by calling Convert_To_Integer on each one,
+-- accumulating the sum of all the values in Sum, and counting them
+-- in Count.  Then divide Sum by Count to get the average and store
+-- it in Average. Also, record the maximum number in the global
+-- variable Max_Number.
+
+for I in Strings'Range loop
+   -- Convert each string to an integer value by looping through
+   -- the characters which are digits, until a nondigit is found,
+   -- taking the ordinal value of each, subtracting the ordinal value
+   -- of '0', and multiplying by 10 if another digit follows.  Store
+   -- the result in Number.
+   Number := Convert_To_Integer(Strings(I));
+   -- Accumulate the sum of the numbers in Total.
+   Sum := Sum + Number;
+   -- Count the numbers.
+   Count := Count + 1;
+   -- Decide whether this number is more than the current maximum.
+   if Number > Max_Number then
+      -- Update the global variable Max_Number.
+      Max_Number := Number;
+   end if;
+end loop;
+-- Compute the average.
+Average := Sum / Count;
+\end{lstlisting}
+
+下面的例子改正了上面的错误: 不在注释中重复代码中明显的内容;
+不描述\texttt{Convert\_To\_Integer}内部的详细内容; 删除错误的代码
+(在和的累加那行语句); 让剩下的少数注释更加明显从代码中区分出来。
+\begin{lstlisting}
+Sum_Integers_Converted_From_Strings:
+   for I in Strings'Range loop
+      Number := Convert_To_Integer(Strings(I));
+      Sum := Sum + Number;
+      Count := Count + 1;
+      -- The global Max_Number is computed here for efficiency.
+      if Number > Max_Number then
+         Max_Number := Number;
+      end if;
+   end loop Sum_Integers_Converted_From_Strings;
+
+Average := Sum / Count;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+范例中注释的改善不单单是减少了注释的数量，而是减少了无用注释的数量。
+
+改写或解释明显的代码的注释没有任何价值。他们浪费了作者的工夫去写，
+也浪费了维护者的工夫去更新。所以，他们常常在后来变成不准确的。这样的注释
+也让代码显得杂乱，隐藏了少数重要的注释。
+
+描述别的单元内部的信息，违反了信息隐藏的原则。有关
+\texttt{Convert\_To\_Integer} 的具体内容跟调用的单元无关，这些内容
+最好一直隐藏着，以免算法改变了。试图解释别的地方
+\end{blockindent}
+
+\glentry{异例}
 
 \section{使用类型}
 
