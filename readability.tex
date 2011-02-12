@@ -1407,11 +1407,88 @@ Average := Sum / Count;
 不去进行某些动作，例如在使用结束后，释放某个数据结构，一定要记得
 注释为什么不释放。否则，维护者可能注意到这个明显的乎略而``改正''
 了，也就引入了错误。
+
+在准则\ref{c:oof:tagged:primitive}中，讨论了对标签类型和重分派
+该准备什么样的文档。
 \end{blockindent}
 
-\glentry{异例}
+\glentry{注解}
+\begin{blockindent}
+对于上面的例子，还可以改进，把变量 \texttt{Count} 和 \texttt{Sum} 在
+本地的块声明，这样他们的作用域就局限在本地，而且他们的初始化也靠近
+使用的地方。例如，命名块为 \texttt{Compute\_Average} 或把代码转移到
+一个名为 \texttt{Average\_Of} 的函数里。\texttt{Max\_Number} 的计算
+也可以从 \texttt{Average} 中分离出来。但是这些改变有别的准则来参考，
+这里的例子只是用来示范注释的使用。
+\end{blockindent}
 
-\section{使用类型}
+\subsection{标示注释}
+\glentry{准则}
+\begin{itemize}
+\item 用分页标示来标识单元边界 (参见准则\ref{c:src:code_fmt:page})。
+\item 如果包程序体、子程序体、任务体、或块的开始之前有声明部分，那在注释
+里重复单元名字来标示他们的开始。
+\item 对于很长或嵌套得很厉害的 \texttt{if} 或 \texttt{case} 语句，
+在结束的地方用一个总结语句控制条件的注释来标示结束。
+\item 对于很长或嵌套得很厉害的 \texttt{if} 语句，
+用一个总结 \texttt{else} 部分语句控制条件的注释来标示\texttt{else} 部分。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\begin{lstlisting}
+if    A_Found then
+   ...
+elsif B_Found then
+   ...
+else  -- A and B were both not found
+   ...
+   if Count = Max then
+      ...
+   end if;
+   ...
+end if;  -- A_Found
+------------------------------------------------------------------------
+package body Abstract_Strings is
+   ...
+   ---------------------------------------------------------------------
+   procedure Concatenate (...) is
+   begin
+      ...
+   end Concatenate;
+   ---------------------------------------------------------------------
+   ...
+begin  -- Abstract_Strings
+   ...
+end Abstract_Strings;
+------------------------------------------------------------------------
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+标示注释突出了代码的结构，使得阅读起来更容易。他们可以是分隔代码段的线或
+构造的说明标签。他们帮助读者了解在代码中的当前位置。这对大型的单元比小单元
+更有用。一个小巧的标示可以和被注释的内容在一行内，因此他增加了信息而没有引起
+混乱。
+
+\texttt{if, elsif, else} 和 \texttt{end if} 经常被长序列的语句分离，有时
+还包含其他的 \texttt{if} 语句。如上面第一个范例中，标示注释突出了同个语句
+中和相距比较远的对应关键词间的联系。对于块语句和循环语句，标签注释不是必须的，
+因为这些语句的语法允许命名并且在结束时重复。用名字比用标示注释更好，
+因为编译器在开始还和结束时会检验名字。
+
+包体内的语句序列通常离包的第一行比较远。许多子程序体会先出现，
+每个都可能包含许多行。在第二个范例中，标签注释突出了和包开始时的对应关系。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+如果过分重复名字和加注条件表达式会让代码很混乱。
+标示注释的好处在于他的视觉距离，特别是分页。
+\end{blockindent}
+
+\include{readability-type}
 
 \section{总结}
 \glentry{拼写}
@@ -1512,4 +1589,19 @@ Average := Sum / Count;
     \item 乎略名字中包含的信息。
     \item 对于标签类型，如果你期望它的特殊化(例如衍生类型)复写某些重分派
     操作，注释重分派的信息。
+
+    \item 用分页标示来标识单元边界 (参见准则\ref{c:src:code_fmt:page})。
+    \item 如果包程序体、子程序体、任务体、或块的开始之前有声明部分，那在注释
+    里重复单元名字来标示他们的开始。
+    \item 对于很长或嵌套得很厉害的 \texttt{if} 或 \texttt{case} 语句，
+    在结束的地方用一个总结语句控制条件的注释来标示结束。
+    \item 对于很长或嵌套得很厉害的 \texttt{if} 语句，
+    用一个总结 \texttt{else} 部分语句控制条件的注释来标示\texttt{else} 部分。
+
+    \item 尽量限制标量类型的值域。
+    \item 从应用中查找可能值的信息。
+    \item 不要重用标准 (Standard) 包中的子类型名称。
+    \item 用子类型声明来促进程序的可读性 (\cite{booch87})。
+    \item 协调使用导出类型和子类型 (\ref{c:prog-prac:types:derived})。
+
 \end{itemize}

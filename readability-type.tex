@@ -1,0 +1,58 @@
+% -*- coding: utf-8 -*-
+% Ada 95 品质和风格
+% 版权所有 (C) 2009,2010, 朱群英
+% Copyright (C) 2009,2010, Zhu Qun-Ying
+%
+% 本书的 TeX 代码和由之生成的 ps，pdf，html，等其他格式的文件
+% 遵循 GNU通用公共授权第三版或其后的版本。
+%
+% 本书是基于有益的目的而加以发布，然而不负任何担保责任。
+%
+% 您应已收到附随于本书的GNU通用公共授权的副本；如果没有，
+% 请参考 <http://www.gnu.org/licenses/gpl.html>
+
+\section{使用类型}
+
+强类型促进软件的可靠性。一个对象的类型定义了所有合法的值和操作，
+这允许编译器在编译时检验和识别潜在的错误。
+另外，类型的规则允许编译器生成在执行时
+检验违反类型约束的代码。运用这些 Ada 编译器的特性，比其他没那么强
+类型的语言更早以及更完整的检测出错误。
+
+\subsection{类型声明准则}
+\glentry{准则}
+\begin{itemize}
+    \item 尽量限制标量类型的值域。
+    \item 从应用中查找可能值的信息。
+    \item 不要重用标准 (Standard) 包中的子类型名称。
+    \item 用子类型声明来促进程序的可读性 (\cite{booch87})。
+    \item 协调使用导出类型和子类型 (\ref{c:prog-prac:types:derived})。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+\begin{lstlisting}
+subtype Card_Image is String (1 .. 80);
+Input_Line : Card_Image := (others => ' ');
+-- restricted integer type:
+type    Day_Of_Leap_Year     is                  range 1 .. 366;
+subtype Day_Of_Non_Leap_Year is Day_Of_Leap_Year range 1 .. 365;
+\end{lstlisting}
+
+下面的声明，程序员的意思是:``我不知道有多少。'' 但是实际的基本值域会
+掩埋在代码中或作为系统参数：
+
+\begin{lstlisting}
+Employee_Count : Integer;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+把无意义的数值从合法的范围内剔除，增加了编译器检测到错误的能力。
+这也提高了程序的可读性。另外，当对象声明为这些子类型时，
+这也让你仔细考虑每次对象的使用。
+
+不同的实现对于大多数预定义类型提供了不同的一套数值。一个读者不能从预定义
+的名字知道预期的值域。当预定义名字被超载这样的情形会更恶化。
+\end{blockindent}
