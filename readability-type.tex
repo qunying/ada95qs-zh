@@ -79,5 +79,42 @@ Employee_Count : Integer;
 
 \glentry{异例}
 \begin{blockindent}
+有些情况下，你并不需要依赖某个特定的数值范围。这些情况确实存在，例如
+数组的索引(如一个列表的大小没有任何语义上的限制)。参见准则
+\ref{c:portability:num-type:pre-def-num-type} 有关正确使用预定义类型的讨论。
+\end{blockindent}
 
+\subsection{枚举类型}
+\glentry{准则}
+\begin{itemize}
+\item 用枚举类型替代数字码。
+\item 只有在绝对必要的时候，才用表示语句来匹配外部设备的需求。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+用:
+\begin{lstlisting}
+type Color is (Blue, Red, Green, Yellow);
+\end{lstlisting}
+来代替:
+\begin{lstlisting}
+Blue   : constant := 1;
+Red    : constant := 2;
+Green  : constant := 3;
+Yellow : constant := 4;
+\end{lstlisting}
+如果学要才加入以下的内容:
+\begin{lstlisting}
+for Color use (Blue   => 1,
+               Red    => 2,
+               Green  => 3,
+               Yellow => 4);
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+枚举比数字码更健壮。在遇到不正确的解释或在维护中增加或删除数值的时候，
+因此而引起的潜在错误会少。数字码是
 \end{blockindent}
