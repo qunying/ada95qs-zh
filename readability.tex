@@ -1597,11 +1597,17 @@ end Abstract_Strings;
     在结束的地方用一个总结语句控制条件的注释来标示结束。
     \item 对于很长或嵌套得很厉害的 \texttt{if} 语句，
     用一个总结 \texttt{else} 部分语句控制条件的注释来标示\texttt{else} 部分。
+\end{itemize}
 
+\glentry{类型的使用}
+\noindent
+\begin{itemize}
     \item 尽量限制标量类型的值域。
     \item 从应用中查找可能值的信息。
     \item 不要重用标准 (Standard) 包中的子类型名称。
     \item 用子类型声明来促进程序的可读性 (\cite{booch87})。
     \item 协调使用导出类型和子类型 (\ref{c:prog-prac:types:derived})。
 
+    \item 用枚举类型替代数字码。
+    \item 只有在绝对必要的时候，才用表示语句来匹配外部设备的需求。
 \end{itemize}
