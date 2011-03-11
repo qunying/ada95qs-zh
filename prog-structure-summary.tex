@@ -11,15 +11,8 @@
 % 您应已收到附随于本书的GNU通用公共授权的副本；如果没有，
 % 请参考 <http://www.gnu.org/licenses/gpl.html>
 
-\section{高级结构}
-\begin{blockindent}
-构建良好的程序很同意被理解、提高和维护。构建糟糕的程序在维护时，
-经常需要重新构建以方便工作。下面列出的许多准则，是作为通用程序设计准则
-给出的。
-\end{blockindent}
-
-\subsection{分别编译能力}
-\glentry{准则}
+\section{总结}
+\glentry{高级结构}
 \begin{itemize}
 \item 把每一个库单元的规范放在独立于实体的文件中。
 \item 避免定义不是主程序的库单元子程序。如果定义了这样的子程序，
@@ -31,24 +24,5 @@
 \item 对于包体的嵌套，用私有子包并在父包中引用。
 \item 对于(其他)子单元用于扩展父单元的抽象或服务需要的数据和子程序，
  用私有子单元规范。
+
 \end{itemize}
-
-\glentry{范例}
-\begin{blockindent}
-下面的文件名说明了一种可能的文件组织以及相随的一致命名约定。
-库单元的名字用后缀 adb 来表示单元体，后缀 ads 表示单元规范，
-任何其他包含子单元的文件的名字，由体名字和子单元名字以下划线
-分隔:
-\begin{lstlisting}
-text_io.ads                 -- the specification
-text_io.adb                 -- the body
-text_io_integer_io.adb      -- a subunit
-text_io_fixed_io.adb        -- a subunit
-text_io_float_io.adb        -- a subunit
-text_io_enumeration_io.adb  -- a subunit
-\end{lstlisting}
-
-依赖于文件系统允许文件名中可以用什么字符，你可以在文件
-名字中用比较清晰的方式来区分父和子单元的名字。
-如果你的文件系统
-\end{blockindent}
