@@ -139,7 +139,7 @@ Ada 95 提供了子库单元的功能，可以避免大多数亚单元的使用�
 
 \glentry{原理}
 \begin{blockindent}
-编译指示一般是用来挑选分区或系统范围的参数。通常，他们反应高级别
+编译指示一般是作为分区或系统范围的参数。通常，他们反应高级别
 软件架构的决策 (例如: pragma Task\_Dispatching\_Policy)
 或者在某特定应用领域之使用 (例如: 安全关键软件)。
 如果编译指示内嵌在某个软件组件中，当组件在配置并不适用的环境中重用，
@@ -158,6 +158,117 @@ Ada 95 提供了子库单元的功能，可以避免大多数亚单元的使用�
 某些编译指示 (例如: pragma Suppress) 有不同形式的使用，包括作为
 一个编译指示。本准则不适用于那些不作为指示时的使用。
 
-\subsection{子库单元}
+\subsection{子程序}
+\glentry{准则}
+\begin{itemize}
+\item 用子程序来增加抽象度。
+\item 限制每个子程序只执行单一动作。
+\end{itemize}
 
+\glentry{范例}
+\begin{blockindent}
+作为一个菜单推动的用户界面包中的一部分，要求画出一个菜单的用户选项。
+菜单的内容会根据用户状态而改变，此时用一个子程序来画比较恰当。
+这样，输出的子程序只有一个目的，而决定菜单内容的逻辑在别的地方。
+
+\begin{lstlisting}
+...
+----------------------------------------------------------------------
+procedure Draw_Menu
+      (Title   : in    String;
+       Options : in    Menu) is
+   ...
+begin  -- Draw_Menu
+   Ada.Text_IO.New_Page;
+   Ada.Text_IO.New_Line;
+   Ada.Text_IO.Set_Col (Right_Column);
+   Ada.Text_IO.Put_Line (Title);
+   Ada.Text_IO.New_Line;
+   for Choice in Alpha_Numeric loop
+     if Options (Choice) /= Empty_Line then
+         Valid_Option (Choice) := True;
+         Ada.Text_IO.Set_Col (Left_Column);
+         Ada.Text_IO.Put (Choice & " -- ");
+         Ada.Text_IO.Put_Line (Options (Choice));
+     end if;
+     ...
+   end loop;
+end Draw_Menu;
+----------------------------------------------------------------------
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+子程序是非常高效和已知的抽象技巧。子程序通过隐藏某个活动的细节，提高了
+程序的可读性。子程序并不是需要被调用一次以上才能存在。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+准则\ref{c:improv-perf:pragma:inline} 探讨子程序调用的额外开销。
+\end{blockindent}
+
+\subsection{函数}
+\glentry{准则}
+\begin{itemize}
+\item 当子程序的主要目的是提供单一值时，用函数。
+\item 最小化函数的副作用。
+\item 当值不需要是静态时，考虑用无参数函数。
+\item 当导出类型需要继承基类型的值时，用无参数函数 (不要用常数)。
+\item 如果值本身有可能被改变，用无参数函数。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+虽然从一个文件中读取一个字符会改变下一个将要读取的字符，和下面函数的主要目的
+比起来，这是可接受的副作用:
+\begin{lstlisting}
+function Next_Character return Character is separate;
+\end{lstlisting}
+然而，如此使用函数可能会导致隐蔽的问题。任何时候，当计算顺序未定，那函数
+返回值的顺序就未定。在以下这个例子中，字符放入 Word 中的顺序和接下来的
+两个给 Suffix 参数的字符顺序未定。没有一个 Next\_Character 函数的实现
+可以保证那个字符赋值给谁:
+\begin{lstlisting}
+   Word : constant String := String'(1 .. 5 => Next_Character);
+begin  -- Start_Parsing
+   Parse(Keyword => Word,
+         Suffix1 => Next_Character,
+         Suffix2 => Next_Character);
+end Start_Parsing;
+\end{lstlisting}
+
+当然，如果顺序并不重要 (如随机数生成器)，那计算顺序也不重要。
+
+下面的例子展现了用无参数函数代替常量:
+\begin{lstlisting}
+type T is private;
+function Nil return T;       -- This function is a derivable 
+function Default return T;   -- operation of type T. Also derivable, 
+                             -- and the value can be changed by
+                             -- recompiling the body of the function
+\end{lstlisting}
+也可以用常量来写:
+\begin{lstlisting}
+type T is private;
+Nil : constant T;
+Default : constant T;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+改变任何非子程序内的变量都是副作用。这包括函数本身调用别的子程序或入口
+时改变的变量在返回时改变被保持了。副作用很难被理解和维护，因此要反对。
+另外，Ada 语言没有定义表达式或作为子程序参数的函数计算顺序，因此，
+依赖于函数副作用计算顺序的的程序是错误的。避免在任何地方使用副作用。
+\end{blockindent}
+
+\subsection{包}
+\glentry{准则}
+\begin{blockindent}
+\end{blockindent}
+
+\subsection{子库单元}
 \label{c:prog-struct:high-level:child-lib-unit}
