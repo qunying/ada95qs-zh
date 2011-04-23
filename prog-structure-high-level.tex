@@ -267,8 +267,156 @@ Default : constant T;
 
 \subsection{包}
 \glentry{准则}
+\begin{itemize}
+\item 用包来实现信息隐藏。
+\item 用含有标签类型和私有类型的包来实现抽象数据类型。
+\item 用包把相关的类型和对象定义组在一起
+      (例如，两个或更多库单元的相同声明部分)。
+\item 将机器依赖封装在包中。将某个设备的软件接口放在一个包中，以便更换
+到另一种设备。
+\item 将底层实现的决策或接口放在包中的子程序。
+\item 用包和子程序来封装和隐藏可能改变的的程序细节 (\cite{nissen84})。
+\end{itemize}
+
+\glentry{范例}
 \begin{blockindent}
+读取文件名和外部文件的其他属性非常依赖于系统。一个名为 Directory 的包，
+可包含了支持对外部目录及其文件的通用操作的类型和子程序。他的内部则依次
+依赖于其他更加针对硬件或操作系统的包:
+\begin{lstlisting}
+package Directory is
+
+   type Directory_Listing is limited private;
+
+   procedure Read_Current_Directory (D : in out Directory_Listing);
+
+   generic
+      with procedure Process (Filename : in String);
+   procedure Iterate (Over : in Directory_Listing);
+
+   ...
+
+private
+
+   type Directory_Listing is ...
+
+end Directory;
+
+---------------------------------------------------------------
+
+package body Directory is
+
+   -- This procedure is machine dependent
+   procedure Read_Current_Directory (D : in out Directory_Listing) is separate;
+
+
+   procedure Iterate (Over : in Directory_Listing) is
+      ...
+   begin
+      ...
+
+      Process (Filename);
+
+      ...
+   end Iterate;
+
+   ...
+
+end Directory;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+包是 Ada 中主要的构造设施。可直接支持抽象、信息隐藏和模块化。例如，为了辅助
+可移植性，而把系统依赖部分封装的时候很有用。一个规约可有多个主体，以隔离
+特定实现的信息，这样其的代码就不需要改变了。
+
+把可能会有变化的地方封装起来，去掉了系统无关部分对其的不必要依赖，从而
+最小化了需要实现改变的精力。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+对这个准则最大反对声通常和性能受损有关。参见准则
+\ref{c:improv-perf:pragma:inline} 有关子程序开销的讨论。
 \end{blockindent}
 
 \subsection{子库单元}
 \label{c:prog-struct:high-level:child-lib-unit}
+\glentry{准则}
+\begin{itemize}
+\item 如果一个新库单元是某个初始抽象的逻辑上的扩展，那定义为子库单元。
+\item 如果一个库单元是独立的 (例如，导入新的抽象，只部分依赖于现存抽象)，
+那么封装在一个分离的库单元中。
+\item 用子包来实现子系统。
+\item 用公共子单元来实现那些子系统中客户可见部分。
+\item 用私有子单元来实现那些子系统中客户不可见部分。
+\item 只有在实现包规约时，用私有子单元来实现局部声明。
+\item 用子包来实现构造器，即使他们的返回值是访问类型。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+下面这个有关视窗系统的例子，是从 \cite{cohen93} 中抽取出来的，
+他说明了在设计子系统时子单元的使用。父 (根) 包声明了客户和子系统需要的
+类型，子类型和常量。每个子包则提供了视窗系统中某个特定的抽象部分，
+例如原子、字体、图形输出、光标和键盘信息:
+\begin{lstlisting}
+package X_Windows is
+   ...
+private
+   ...
+end X_Windows;
+
+
+package X_Windows.Atoms is
+   type Atom is private;
+   ...
+private
+   ...
+end X_Windows.Atoms;
+
+
+package X_Windows.Fonts is
+   type Font is private;
+   ...
+private
+   ...
+end X_Windows.Fonts;
+
+
+package X_Windows.Graphic_Output is
+   type Graphic_Context is private;
+   type Image is private;
+   ...
+private
+   ...
+end X_Windows.Graphic_Output;
+
+
+package X_Windows.Cursors is
+   ...
+end X_Windows.Cursors;
+
+
+package X_Windows.Keyboard is
+   ...
+end X_Windows.Keyboard;
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+用户在需要时用子库单元来扩展接口，能创造出更严谨和不杂乱的接口。
+父包只有相关的功能。父包提供了通用的接口，而子单元在提供更完整的
+编程接口，是对他们扩展或定义的抽象量身定做的。
+
+子包是建立在 Ada 模块化的优势上的，``分开的规约和主体，分隔了用户对包的使用
+接口(规约) 和 包的实现 (主体) '' (\cite{rational95}, \S{}II.7)。
+子包增加了既能扩展一个父包又不需要重编译父包或父包的客户的能力。
+
+子包允许逻辑上不同的包共享私有类型。可见度规则允许子规约的私有部分和
+子主体可见父包的私有部分。因此，可避免创建一个完整的包 ..
+
+\end{blockindent}
