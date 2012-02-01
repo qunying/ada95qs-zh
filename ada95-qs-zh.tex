@@ -12,8 +12,9 @@
 % 请参考 <http://www.gnu.org/licenses/gpl.html>
 
 \documentclass[11pt]{book}
+\usepackage{amssymb}
 \usepackage[bindingoffset=1.5cm,top=3.5cm, bottom=3.5cm]{geometry}
-\usepackage[boldfont,slantfont,CJKnumber,CJKaddspaces]{xeCJK}
+\usepackage[boldfont,slantfont,CJKnumber]{xeCJK}
 %\CJKlanguage{Chinese-Simp}
 \defaultfontfeatures{Mapping=tex-text}
 \setmainfont{DejaVu Sans}% 设置缺省英文字体
@@ -26,7 +27,7 @@
 \usepackage{color}
 \definecolor{navy}{rgb}{0, 0, 0.5}
 \definecolor{darkblue}{rgb}{0, 0, 0.4}
-\usepackage[xetex,
+\usepackage[xetex,unicode,
 bookmarks=true, bookmarksnumbered=true,
 pdfstartview=FitH,
 breaklinks=true,
@@ -38,7 +39,6 @@ pdfkeywords={Ada, Programmming, Quality, Style, Chinese},
 pdfauthor={Zhu Qun-Ying}]{hyperref}
 
 \usepackage{titlesec}
-\usepackage{amssymb}
 \usepackage{listings}
 \include{caption-zh}
 
