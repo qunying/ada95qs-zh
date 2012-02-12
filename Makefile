@@ -18,8 +18,11 @@ BIBTEX=bibtex
 DEP_FILES=caption-zh.tex copyright-notice.tex translator-preface.tex \
 preface.tex introduction.tex src-presentation.tex readability.tex \
 readability-type.tex prog-structure.tex prog-structure-high-level.tex \
+prog-structure-visibility.tex \
 prog-structure-summary.tex \
-prog-practices.tex object-oriented-feature.tex portability.tex \
+prog-practices.tex concurrency.tex \
+reusability.tex reusability-independence.tex \
+object-oriented-feature.tex portability.tex \
 improving-perf.tex \
 bib.tex
 

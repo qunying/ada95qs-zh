@@ -1,7 +1,7 @@
 % -*- coding: utf-8 -*-
 % Ada 95 品质和风格
-% 版权所有 (C) 2011 朱群英
-% Copyright (C) 2011 Zhu Qun-Ying
+% 版权所有 (C) 2011,2012 朱群英
+% Copyright (C) 2011,2012 Zhu Qun-Ying
 %
 % 本书的 TeX 代码和由之生成的 ps，pdf，html，等其他格式的文件
 % 遵循 GNU通用公共授权第三版或其后的版本。
@@ -19,6 +19,7 @@
 \end{blockindent}
 
 \subsection{分别编译能力}
+\label{c:prog-struct:high-level:separate-comp}
 \glentry{准则}
 \begin{itemize}
 \item 把每一个库单元的规约放在独立于实体的文件中。
@@ -413,11 +414,145 @@ end X_Windows.Keyboard;
 编程接口，是对他们扩展或定义的抽象量身定做的。
 
 子包是建立在 Ada 模块化的优势上的，``分开的规约和主体，分隔了用户对包的使用
-接口(规约) 和 包的实现 (主体) '' (\cite{rational95}, \S{}II.7)。
+接口(规约)和包的实现(主体) '' (\cite{rational95}, \S{}II.7)。
 子包增加了既能扩展一个父包又不需要重编译父包或父包的客户的能力。
 
 逻辑上不同的包可通过子包共享私有类型。可见度规则允许子规约的私有部分和
 子主体可见父包的私有部分。因此，可避免仅仅为了开发抽象需要共享一部分私有
-类型和他的表示形式而创建一个整体的包。包的客户看不到私有的表示形式。
+类型及其表征而创建一个整体的包。包的客户看不到私有的表征，因此
+其子包和本身的抽象得以维持。
 
+私有子包可以用作局部声明，这让你在需要实现父包及其扩展包时，拥有支持性的声明。
+使用一套通用的支持声明(数据结构、数据操作子程序)，提高了程序的可维护性。
+你可以修改内部的表征和支持子程序的实现而不需要修改或重编译其他子系统，
+因为这些支持性的子程序在私有子包的主体中实现。参见准则
+\ref{c:prog-struct:high-level:separate-comp}、
+\ref{c:prog-struct:visiblity:min-intf}、
+\ref{c:reusability:independence:subsystem-design} 和
+\ref{c:reusability:independence:tagged-type-hierachies}。
+
+另参见准则\ref{c:oof:tagged:visibility:derived-tag}
+有关用子库单元来生成标签类型分层结构的讨论。
+\end{blockindent}
+
+\subsection{内聚性}
+\label{c:prog-structure:high-level:cohesion}
+
+\glentry{准则}
+\begin{itemize}
+\item 让每个包只用于一个目的。
+\item 用包把相关的数据、类型和子程序组在一起。
+\item 避免收集没有关系的对象和子程序 (\cite{nasa87}, \cite{nissen84})。
+\item 考虑系统的重构, 把两个紧密相关的单元合并到一个包或包的分层结构中，
+又或者把相对独立的单元分到不同的包里。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+这是一个反面的例子，一个名为 \texttt{Project\_Definitions} 的包，明显是
+某个项目中包罗所有的包，也可能很混乱。这可能是为了让项目成员在他们的程序
+中只用一个 \texttt{with} 语句而形成的。
+
+好的例子，名为 \texttt{Display\_Format\_Definitions} 的包，包含了针对某个
+特定显示的特定格式的所有类型和常量, 名为 \texttt{Cartridge\_Tape\_Handler}
+的包，包含了针对某特殊用途设备的所有类型、常量和子程序。
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+包内实体间关系的深浅程度，对于包及其组成的程序是否易于理解有直接的影响。
+组合的条件有很多，某些条件没有另一些条件有效。按照类的数据、活动(例如初始化模块)
+的时间特性来分组，就没有按他们的功能或数据交流的需求分来得有效
+(参加 \cite{charette86})。
+
+``正确'' 的系统结构对于系统的维护性有巨大的影响。如果初始的结构不是很理想，
+结构重组是很重要的，虽然当时会比较痛苦。
+
+有关异构数据参见\ref{c:prog-prac:data:heterogeneous}。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+传统的子例程库通常把不同功能的子例程组在一起，即使这些库应该分成包的组合，
+每个包在包含一套逻辑上内聚的子例程。
+\end{blockindent}
+
+\subsection{数据耦合}
+\glentry{准则}
+\begin{itemize}
+\item 避免在包规范中定义变量。
+\end{itemize}
+
+
+\glentry{范例}
+\begin{blockindent}
+这个例子是编译器中的一部分。处理错误信息的包和含有代码生成器的包都
+需要知道当前的行数。这里并没有定义一个\texttt{Natural}的变量来分享
+这一信息，而是把具体实现隐藏在包中，并提供了一个访问函数:
+
+\begin{lstlisting}
+-------------------------------------------------------------------------
+package Compilation_Status is
+   type Line_Number is range 1 .. 2_500_000;
+   function Source_Line_Number return Line_Number;
+end Compilation_Status;
+-------------------------------------------------------------------------
+with Compilation_Status;
+package Error_Message_Processing is
+   -- Handle compile-time diagnostic.
+end Error_Message_Processing;
+-------------------------------------------------------------------------
+with Compilation_Status;
+
+package Code_Generation is
+   -- Operations for code generation.
+end Code_Generation;
+-------------------------------------------------------------------------
+\end{lstlisting}
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+紧密耦合的程序单元非常难调试和维护。用访问函数来保护共享的数据，耦合度就
+减少了。这避免了对于数据结构的依赖，也控制了数据访问。
+\end{blockindent}
+
+\glentry{注解}
+\begin{blockindent}
+最普遍的反对声音通常都牵涉到性能损失。当把一个变量搬到包实体中，就必须提供访问
+子程序，每次调用都是额外开销。有关子程序调用的额外开销讨论，
+参见准则\ref{c:improv-perf:pragma:inline}。
+\end{blockindent}
+
+\subsection{任务}
+\glentry{准则}
+\begin{itemize}
+\item 在问题域中用任务来对抽象、异步的实体建模。
+\item 用任务定义多处理器架构中的并行算法。
+\item 用任务执行并行、循环或排序的事件 (\cite{nasa87})。
+\end{itemize}
+
+\glentry{原理}
+\begin{blockindent}
+这些准则的原理在准则\ref{c:concurrency:options:task}中。第\ref{c:concurrency}章
+会对任务进行更深入的讨论。
+\end{blockindent}
+
+
+\subsection{保护类型}
+\glentry{准则}
+\begin{itemize}
+\item 用保护类型来控制或同步对数据或设备的访问。
+\item 用保护类型来实现任务间的同步，如被动的资源监视。
+\end{itemize}
+
+\glentry{范例}
+\begin{blockindent}
+参见准则\ref{c:concurrency:options:protected}。
+\end{blockindent}
+
+\glentry{原理}
+\begin{blockindent}
+这些准则的原理在准则\ref{c:concurrency:options:protected}中。
+第\ref{c:concurrency}章对并行性和保护类型有更深入的讨论。
 \end{blockindent}
