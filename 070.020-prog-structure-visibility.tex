@@ -1,0 +1,79 @@
+% -*- coding: utf-8 -*-
+% Ada 95 品质和风格
+% 版权所有 (C) 2011 朱群英
+% Copyright (C) 2011 Zhu Qun-Ying
+%
+% 本书的 TeX 代码和由之生成的 ps，pdf，html，等其他格式的文件
+% 遵循 GNU通用公共授权第三版或其后的版本。
+%
+% 本书是基于有益的目的而加以发布，然而不负任何担保责任。
+%
+% 您应已收到附随于本书的GNU通用公共授权的副本；如果没有，
+% 请参考 <http://www.gnu.org/licenses/gpl.html>
+
+\section{可见度}
+Ada 的可见度控制功能是Ada语言最重要的优势之一, 特别是当``分开开发一个大型系统的
+各部分''时。她强制信息的隐藏和分离利害关系的能力就来源于此。
+假如没有这些功能，而过度依赖于\texttt{use}语句，是很浪费而危险的。
+参见准则\ref{c:prog-prac:data:visibility} 和
+ \ref{c:oof:tagged:visibility:derived-tag}。
+
+\subsection{接口的最小化}
+\label{prog-struct:visiblity:min-intf}
+\glentry{准则}
+\begin{itemize}
+\item 只把使用包需要的信息放在规范中。
+\item 最小化包规范中的声明数量。
+\item 不要因为容易建立而包含额外的操作。
+\item 在包规范中，最小化语境语句 (\texttt{with})。
+\item 重新考虑有大量参数的子程序。
+\item 不要为了限制参数的数量而在子程序或包中操纵全局数据。
+\item 避免不必要的可见度，对用户隐藏程序的具体实现。
+\item 用子库单元来控制子系统接口的可见度。
+\item 用私有子库单元来声明外部用不到的信息。
+\item 用子库单元来对不同客户呈现某一实体的不同视点。
+\item 在找出各样预期客户的接口逻辑后，设计(及重设计) 接口。
+\end{itemize}
+
+
+\glentry{范例}
+\begin{lstlisting}
+-------------------------------------------------------------------------
+package Telephone_Book is
+   type Listing is limited private;
+   procedure Set_Name (New_Name : in     String;
+                       Current  : in out Listing);
+   procedure Insert (Name    : in     String;
+                     Current : in out Listing);
+   procedure Delete (Obsolete : in     String;
+                     Current  : in out Listing);
+private
+   type Information;
+   type Listing is access Information;
+end Telephone_Book;
+-------------------------------------------------------------------------
+package body Telephone_Book is
+   -- Full details of record for a listing
+   type Information is
+      record
+         ...
+         Next : Listing;
+      end record;
+   First : Listing;
+   procedure Set_Name (New_Name : in     String;
+                       Current  : in out Listing) is separate;
+   procedure Insert (Name    : in      String;
+                     Current : in out  Listing) is separate;
+   procedure Delete (Obsolete : in     String;
+                     Current  : in out Listing) is separate;
+end Telephone_Book;
+-------------------------------------------------------------------------
+\end{lstlisting}
+
+\glentry{原理}
+\begin{blockindent}
+规范中的每一个实体，都要认真考虑其转移到子包或父包实体中的可能。
+越少的冗余细节，程序、包或子程序就越容易理解。对于维护者而言，知道
+准确的包接口很重要，以便于理解改动的效果。子程序的接口不仅限于参数。
+任何在包或子程序中修改全局变量的行为，都可被外界视为未公开的接口。
+\end{blockindent}

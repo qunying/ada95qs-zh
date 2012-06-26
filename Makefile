@@ -15,16 +15,19 @@
 
 LATEX=xelatex
 BIBTEX=bibtex
-DEP_FILES=caption-zh.tex copyright-notice.tex translator-preface.tex \
-preface.tex introduction.tex src-presentation.tex readability.tex \
-readability-type.tex prog-structure.tex prog-structure-high-level.tex \
-prog-structure-visibility.tex \
-prog-structure-summary.tex \
-prog-practices.tex concurrency.tex \
-reusability.tex reusability-independence.tex \
-object-oriented-feature.tex portability.tex \
-improving-perf.tex \
-bib.tex
+DEP_FILES=caption-zh.tex 000-copyright-notice.tex 010-translator-preface.tex \
+020-preface.tex 030-authors-ack.tex 040-introduction.tex \
+050-src-presentation.tex 060-readability.tex \
+060.010-readability-type.tex 070-prog-structure.tex \
+070.010-prog-structure-high-level.tex \
+070.020-prog-structure-visibility.tex \
+070.030-prog-structure-summary.tex \
+080-prog-practices.tex 090-concurrency.tex \
+100-portability.tex \
+110-reusability.tex 110.040-reusability-independence.tex \
+120-object-oriented-feature.tex \
+130-improving-perf.tex \
+999-bib.tex
 
 PDFVIWER=epdfview
 
